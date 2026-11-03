@@ -100,7 +100,7 @@ if (values.worker !== undefined) {
 
   await new Promise((r) => setTimeout(r, Number(values.ramp) * 1000 + 5000));
   const before = await stats();
-  console.log(`connected clients at gateway: ${before.clients}; measuring for ${values.hold}s`);
+  console.error(`connected clients at gateway: ${before.clients}; measuring for ${values.hold}s`);
   for (const w of workers) w.send('measure');
   await new Promise((r) => setTimeout(r, Number(values.hold) * 1000));
   const after = await stats();

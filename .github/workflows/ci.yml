@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  e2e:
+    name: E2E + Lighthouse CI
+    needs: checks
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # GitHub's ubuntu runners ship Google Chrome, which the Playwright config uses (channel: chrome).
+      - name: Playwright
+        run: pnpm e2e
+      - name: Lighthouse CI (mobile)
+        # The Playwright webServer processes stopped with the test run; start the stack again.
+        run: |
+          FEED_LOG=quiet node apps/feed-sim/dist/index.js &
+          GW_LOG=quiet node apps/gateway/dist/index.js &
+          BET_DB=:memory: node apps/bet-api/dist/index.js &
+          pnpm --filter @liveline/web start &
+          npx wait-on -t 60000 http://localhost:3000 http://127.0.0.1:7002/health
+          pnpm --filter @liveline/e2e lhci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+            e2e/.lighthouseci
+          if-no-files-found: ignore

@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:3000',
-    channel: process.env.PW_CHANNEL ?? 'chrome',
+    channel: process.env.PW_CHANNEL || 'chrome',
     viewport: { width: 1280, height: 800 },
     trace: 'retain-on-failure',
   },

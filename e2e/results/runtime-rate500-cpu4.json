@@ -1,0 +1,45 @@
+{
+  "rate": 500,
+  "cpuSlowdown": 4,
+  "idle": {
+    "fps": 60.1,
+    "frameP50": 16.7,
+    "frameP95": 16.7,
+    "frameMax": 16.8,
+    "framesOver33ms": 0,
+    "longTasks": 0,
+    "oddsButtonsInDom": 119,
+    "panel": {
+      "WS msgs/s": "9",
+      "KB/s": "2.4",
+      "ops/s": "26",
+      "tick→client p50 / p99": "73 / 103 ms",
+      "FPS": "60",
+      "slow frames/s": "0",
+      "odds cells rendered/s": "2",
+      "long tasks": "0",
+      "INP": "—",
+      "LCP": "68 ms",
+      "version gaps / reconnects": "0 / 0"
+    }
+  },
+  "scroll": {
+    "fps": 60.3,
+    "frameP50": 16.7,
+    "frameP95": 16.7,
+    "frameMax": 16.8,
+    "framesOver33ms": 0,
+    "longTasks": 0
+  },
+  "sportSwitch": {
+    "worstInteractionMs": 16,
+    "each": [16, 16, 16, 16]
+  },
+  "interactions": {
+    "count": 32,
+    "inp": 32,
+    "p50": 16,
+    "longTasks": 0,
+    "note": "Event Timing reports only interactions >= 16 ms; count = interactions above that threshold"
+  }
+}

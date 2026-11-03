@@ -9,7 +9,7 @@
   --brand: #f5b301;
   --up: #2fd47a;
   --down: #ff5c5c;
-  --live: #ff4757;
+  --live: #d11a2f;
   --focus: #6aa8ff;
   --radius: 8px;
   --header-h: 56px;
@@ -156,6 +156,12 @@ button {
   font-size: 20px;
 }
 
+.lead {
+  max-width: 640px;
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
 .side {
   position: sticky;
   top: calc(var(--header-h) + 16px);
@@ -223,7 +229,7 @@ button {
 }
 
 .row[data-status='suspended'] .badge-live {
-  background: var(--muted);
+  background: #4b5563;
 }
 
 .score {
@@ -826,5 +832,57 @@ button {
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+}
+
+/* Metrics panel */
+
+.small {
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.stat {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+
+.stat dt {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.stat dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat dd[data-warn] {
+  color: var(--down);
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slider input {
+  width: 100%;
+  accent-color: var(--brand);
+}
+
+@media (max-width: 760px) {
+  .lead {
+    display: none;
   }
 }

@@ -44,6 +44,10 @@ export default async function Page({
             <h1>{sportName(sportId)}</h1>
             <span className="muted">{snapshot ? `${snapshot.events.length} events` : ''}</span>
           </div>
+          <p className="lead">
+            Live odds from a synthetic feed, pushed over WebSocket and coalesced every 100 ms. Click
+            a price to add it to the betslip, or a match to see all its markets.
+          </p>
           <Board key={sportId} sportId={sportId} initial={snapshot} />
         </section>
         <SidePanel />

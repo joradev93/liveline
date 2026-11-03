@@ -200,3 +200,33 @@ Format: what — why — alternatives considered.
 
 - **Why:** a leg stays on the slip when the user switches sport. The slip subscribes to the event topics
   of its legs (ref-counted, shared with the event panel), so prices and suspensions stay current.
+
+## D28. Initial JS target (< 120 KB) not reached; lazy-loading side panels reverted
+
+- **Measured:** Next.js 16 runtime + React 19 DOM + Turbopack runtime = 128.9 KB gzip on their own.
+  App code adds ~26 KB. Total initial JS 154.7 KB gzip (133.0 KB with brotli).
+- **Tried:** `next/dynamic` for the betslip, metrics panel and event panel. Result: initial JS
+  −2.5 KB, total JS +3.9 KB (more chunks), plus a placeholder flash. Reverted.
+- **What would reach < 120 KB:** a different framework for this page (e.g. Preact/Solid, or React
+  without the Next.js App Router runtime). The spec asks for Next.js App Router + RSC, so the number is
+  reported as missed instead of changing the stack.
+
+## D29. CSS inlined, lead paragraph as the LCP element
+
+- **What:** `experimental.inlineCss` (6 KB CSS) and a short server-rendered paragraph under the sport
+  heading.
+- **Why:** Lighthouse showed a render-blocking CSS request and, on desktop, an LCP candidate in the
+  side panel that was sometimes painted late. Both fixed; numbers in METRICS.md.
+
+## D30. Metrics panel measures in the browser, not on the server
+
+- **What:** msgs/s, KB/s, ops/s and tick latency come from the worker; FPS, slow frames, long tasks and
+  odds-cell renders from the main thread; INP/LCP from `web-vitals` (loaded with `import()`).
+- **Why:** these are what the visitor experiences on their own device; server numbers live in
+  METRICS.md.
+
+## D31. Load slider goes through a Next.js route handler
+
+- **What:** `POST /api/load` → feed-sim `POST /rate`. `LOAD_CONTROL=off` disables it.
+- **Why:** feed-sim stays private (no CORS, no public port). The slider is shared by all viewers,
+  which the UI says.

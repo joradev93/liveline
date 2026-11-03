@@ -107,26 +107,88 @@ node load/slow-client.mjs --pause 90 --after 5
 With pauses of 15 s and 40 s nothing was skipped: macOS lets the kernel hold up to 8 MB per
 connection (`net.inet.tcp.autosndbufmax` + `autorcvbufmax` = 4 MB each) before uWS starts buffering.
 
-## Web: initial JavaScript (Day 4 baseline)
+## Web: initial JavaScript
 
 Production build (`next build`, Turbopack), served by `next start` (gzip). Measured in Chrome via
-Resource Timing `encodedBodySize` (bytes on the wire).
+Resource Timing `encodedBodySize` (bytes on the wire). "Initial" = scripts referenced by the raw server
+HTML. Raw output: `e2e/results/bundle.txt`.
 
 ```bash
 pnpm --filter @liveline/web build && pnpm --filter @liveline/web start
 node e2e/measure-bundle.mjs
 ```
 
-| what                                                          | compressed (gzip)        | uncompressed |
-| ------------------------------------------------------------- | ------------------------ | ------------ |
-| initial JS, main thread (7 files)                             | **150.4 KB**             | 502.6 KB     |
-| — of which Next.js runtime + React DOM + Turbopack runtime    | 128.6 KB                 |              |
-| — of which app code (store, rows, panel)                      | 7.8 KB                   |              |
-| — of which Board + @tanstack/react-virtual                    | 14.0 KB                  |              |
-| feed worker                                                   | 0.9 KB (bootstrap chunk) |              |
-| HTML document (server-rendered first rows + snapshot payload) | 28.1 KB                  | 280.7 KB     |
+| what                                                      | Day 4    | Day 6 (final)             |
+| --------------------------------------------------------- | -------- | ------------------------- |
+| initial JS, gzip (on the wire)                            | 150.4 KB | **154.7 KB** (8 files)    |
+| initial JS, same files with brotli q11 (computed locally) | —        | 133.0 KB                  |
+| — Next.js runtime + React DOM + Turbopack runtime (gzip)  | 128.6 KB | 128.9 KB                  |
+| — app code (gzip)                                         | 21.8 KB  | 25.8 KB (+ metrics panel) |
+| lazy JS after hydration (web-vitals)                      | —        | 2.5 KB                    |
+| HTML document, gzip                                       | 28.1 KB  | 33.2 KB                   |
 
-**Target < 120 KB: missed.** The framework baseline alone is 128.6 KB gzip, above the target.
+**Target < 120 KB: missed.** The framework alone (Next.js 16 App Router + React 19 DOM) is
+128.9 KB gzip, above the target before any app code. See DECISIONS D28 for what was tried.
+
+## Web: Lighthouse (Lighthouse CI 0.16, Chrome, 3 runs, median)
+
+```bash
+cd e2e && CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  npx lhci collect --config=lighthouserc.json          # mobile (default: simulated slow 4G, 4x CPU)
+# desktop: --config=lighthouserc.desktop.json
+node lh-summary.mjs results/lighthouse-mobile
+```
+
+| preset  | performance | accessibility | best practices | FCP    | LCP        | TBT  | CLS | LCP element                |
+| ------- | ----------- | ------------- | -------------- | ------ | ---------- | ---- | --- | -------------------------- |
+| mobile  | 100         | 100           | 100            | 790 ms | **790 ms** | 0 ms | 0   | team name in the first row |
+| desktop | 100         | 100           | 100            | 209 ms | **209 ms** | 0 ms | 0   | lead paragraph             |
+
+LCP target (< 1.5 s): met in both presets. Raw: `e2e/results/lighthouse-*/`.
+Server, gateway and feed run on the same machine (no real network latency).
+
+## Web: runtime under feed load (FPS, INP, long tasks)
+
+`e2e/measure-runtime.mjs` drives Chrome (headless, 1280×800): 10 s idle with live updates, 10 s of
+continuous wheel scrolling, then 30+ interactions (toggle odds in the betslip, open/close the event
+panel) and 4 sport switches. Frames from `requestAnimationFrame`, long tasks from
+`PerformanceObserver('longtask')`, interaction latency from Event Timing (`interactionId`).
+INP = worst interaction (fewer than 50 interactions). CPU slowdown via CDP
+`Emulation.setCPUThrottlingRate` (checked: a fixed JS loop ran 3.65× slower at rate 4).
+
+```bash
+node e2e/measure-runtime.mjs --rate 500 --cpu 1
+node e2e/measure-runtime.mjs --rate 500 --cpu 4
+node e2e/measure-runtime.mjs --rate 2000 --cpu 4
+```
+
+| feed rate | CPU slowdown | FPS idle | frame p95 idle | FPS scrolling | frame p95 / max scrolling | long tasks | INP   | worst sport switch | ops/s applied | odds cells rendered/s | tick→client p50 / p99 |
+| --------- | ------------ | -------- | -------------- | ------------- | ------------------------- | ---------- | ----- | ------------------ | ------------- | --------------------- | --------------------- |
+| 500/s     | 1×           | 60       | 16.7 ms        | 60.1          | 16.7 / 33.3 ms            | 0          | 32 ms | 32 ms              | 17            | 10                    | 75 / 101 ms           |
+| 500/s     | 4×           | 60.1     | 16.7 ms        | 60.3          | 16.7 / 16.8 ms            | 0          | 32 ms | 16 ms              | 26            | 2                     | 73 / 103 ms           |
+| 2000/s    | 4×           | 60       | 16.8 ms        | 60.3          | 16.7 / 16.8 ms            | 0          | 32 ms | 32 ms              | 80            | 14                    | 92 / 101 ms           |
+
+- INP target (< 100 ms at 500 ticks/s): met (32 ms). Event Timing rounds durations to 8 ms.
+- "ops/s applied" and "odds cells rendered/s" come from the app's own metrics panel during the idle
+  phase: the client receives one sport topic (main markets only), and React re-renders only odds
+  cells that are mounted (visible + overscan) and whose price changed.
+- Why it is this light: coalescing (≤ 10 messages/s per topic) + topic scoping (one sport, main
+  markets) + per-cell selectors. The 2000 ticks/s feed produces ~80 applied ops/s for the
+  Football topic.
+- Raw: `e2e/results/runtime-*.json`.
+
+## Fixes made because of measurements
+
+| found by                             | problem                                                                          | fix                                                                     | result                            |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------- |
+| randomized replica test (Day 2)      | a client skipped under backpressure stays stale on a quiet topic                 | catch-up snapshot when it drains                                        | test passes; D12                  |
+| slow-client run (Day 3)              | backpressure never triggered with 15 s / 40 s pauses                             | none needed: macOS kernel buffers hold 8 MB first; test with 90 s pause | 708 skipped, 6 resyncs            |
+| reasoning + render counter (Day 4/6) | market group re-rendered on every price tick                                     | `useMarketShape` (stable object)                                        | only the changed cell renders     |
+| Lighthouse                           | LIVE badge contrast 3.33:1, SUSP badge 3.13:1                                    | darker backgrounds                                                      | accessibility 95 → 100            |
+| Lighthouse                           | `/favicon.ico` 404 in console                                                    | `app/icon.svg`                                                          | best practices 96 → 100           |
+| Lighthouse                           | render-blocking CSS (est. 150 ms on mobile)                                      | `experimental.inlineCss`                                                | no CSS request                    |
+| Lighthouse                           | desktop LCP element = side-panel hint text, painted late (615 ms in 2 of 3 runs) | server-rendered lead text in the main column                            | desktop LCP 209 ms in 3 of 3 runs |
+| bundle measurement                   | try: lazy-load betslip, metrics and event panel                                  | measured: −2.5 KB initial, +3.9 KB total                                | **reverted** (D28)                |
 
 ## Bet API: POST /bets (k6, Docker)
 

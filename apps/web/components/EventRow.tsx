@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import { formatStart, selectionLabel } from '@/lib/format';
 import { useEvent, useMarketShape } from '@/lib/hooks';
+import { renderStats } from '@/lib/render-stats';
 import { useSelectEvent } from '@/lib/ui-context';
 import { OddsButton } from './OddsButton';
 
@@ -10,6 +11,7 @@ import { OddsButton } from './OddsButton';
 export const EventRow = memo(function EventRow({ eventId }: { eventId: number }) {
   const event = useEvent(eventId);
   const selectEvent = useSelectEvent();
+  renderStats.rows++;
   if (!event) return null;
   const locked = event.status !== 'live' && event.status !== 'prematch';
   const isLive = event.status === 'live' || event.status === 'suspended';

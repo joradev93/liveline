@@ -3,6 +3,7 @@
 import { formatOdds } from '@liveline/protocol';
 import { memo, useLayoutEffect, useRef } from 'react';
 import { useMarketStatus, usePrice, useStore } from '@/lib/hooks';
+import { renderStats } from '@/lib/render-stats';
 import { useBetslip, useIsSelected } from '@/lib/ui-context';
 
 interface Props {
@@ -35,6 +36,7 @@ export const OddsButton = memo(function OddsButton({
   const ref = useRef<HTMLButtonElement>(null);
   const previous = useRef(price);
   const flip = useRef(false);
+  renderStats.odds++;
 
   useLayoutEffect(() => {
     const before = previous.current;

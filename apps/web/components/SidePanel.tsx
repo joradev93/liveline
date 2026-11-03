@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useSlipLegs } from '@/lib/ui-context';
 import { Betslip } from './Betslip';
+import { MetricsPanel } from './MetricsPanel';
 
 /** Right column on desktop; a bottom sheet with a toggle bar on small screens. */
 export function SidePanel() {
@@ -23,6 +24,7 @@ export function SidePanel() {
       </button>
       <div className="side-content">
         <Betslip />
+        <MetricsPanel />
       </div>
     </aside>
   );
