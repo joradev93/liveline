@@ -14,3 +14,4 @@ test-results/
 load/results/*.log
 .DS_Store
 next-env.d.ts
+data/

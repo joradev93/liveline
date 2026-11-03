@@ -127,3 +127,32 @@ node e2e/measure-bundle.mjs
 | HTML document (server-rendered first rows + snapshot payload) | 28.1 KB                  | 280.7 KB     |
 
 **Target < 120 KB: missed.** The framework baseline alone is 128.6 KB gzip, above the target.
+
+## Bet API: POST /bets (k6, Docker)
+
+Each request is a new single bet (new `Idempotency-Key`, `acceptChanges: any`, stake 1 cent) on a
+random open main market of a prematch event. SQLite file DB in WAL mode, one Node process.
+
+```bash
+cd load
+docker run --rm -i --add-host=host.docker.internal:host-gateway -v "$PWD:/scripts" \
+  -e RATE=200 -e DURATION=30s grafana/k6:0.54.0 run /scripts/k6/bets.js
+# same with RATE=1000
+```
+
+| rate   | requests | accepted | rejected (409/422) | p50     | p95     | p99     | max     |
+| ------ | -------- | -------- | ------------------ | ------- | ------- | ------- | ------- |
+| 200/s  | 6 004    | 6 000    | 1                  | 0.83 ms | 1.29 ms | 2.15 ms | 11.3 ms |
+| 1000/s | 30 004   | 29 995   | 6                  | 0.43 ms | 3.21 ms | 7.32 ms | 16.8 ms |
+
+Rejections are real state changes during the run (market suspended / event closed), not errors.
+(k6 counts them in `http_req_failed` because they are not 2xx.) Raw: `load/results/k6-bets-*.json`.
+
+## End-to-end tests
+
+```bash
+pnpm build && pnpm e2e     # Playwright, system Chrome
+```
+
+7 tests pass (8.1 s): server-rendered rows in HTML, live odds updates, event panel, sport switch,
+single bet, multiple bet, toggle selection.

@@ -1,6 +1,7 @@
 import { SPORTS, type SnapshotMessage } from '@liveline/protocol';
 import { Board } from '@/components/Board';
 import { ConnectionBadge } from '@/components/ConnectionBadge';
+import { SidePanel } from '@/components/SidePanel';
 import { SportTabs } from '@/components/SportTabs';
 import { GATEWAY_HTTP_URL } from '@/lib/config';
 import { sportName } from '@/lib/format';
@@ -45,7 +46,7 @@ export default async function Page({
           </div>
           <Board key={sportId} sportId={sportId} initial={snapshot} />
         </section>
-        <aside className="side" />
+        <SidePanel />
       </main>
     </>
   );

@@ -14,9 +14,7 @@
   },
   "dependencies": {
     "@liveline/protocol": "workspace:*",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.71.0"
-  },
-  "devDependencies": {
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.71.0",
     "@liveline/feed-sim": "workspace:*"
   }
 }

@@ -1,7 +1,7 @@
 import { clientMessageSchema } from '@liveline/protocol/schemas';
 import type { ErrorMessage, Topic } from '@liveline/protocol';
 import uWS, { type UWS } from './uws.js';
-import type { FeedClient } from './feed-client.js';
+import type { FeedClient } from '@liveline/feed-sim/client';
 import type { Subscriber, TopicHub } from './hub.js';
 
 export interface GatewayServerOptions {

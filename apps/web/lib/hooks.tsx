@@ -1,7 +1,14 @@
 'use client';
 
 import type { Topic } from '@liveline/protocol';
-import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from 'react';
 import type { FeedClient } from './feed-client';
 import { eventKey, marketKey, topicKey, type LiveStore } from './store';
 
@@ -52,6 +59,32 @@ export function useEvent(eventId: number) {
 export function useTopicEventIds(topic: Topic): number[] {
   const store = useStore();
   return useKey(topicKey(topic), () => store.getTopicEventIds(topic));
+}
+
+/**
+ * Current prices of several selections, as one array (betslip). The snapshot is a string
+ * so React can compare it cheaply; the array is rebuilt only when a price changed.
+ */
+export function usePrices(
+  legs: readonly { marketId: number; k: string }[],
+): (number | undefined)[] {
+  const store = useStore();
+  const subscribe = useCallback(
+    (cb: () => void) => {
+      const offs = legs.map((l) => store.subscribe(marketKey(l.marketId), cb));
+      return () => offs.forEach((off) => off());
+    },
+    [store, legs],
+  );
+  const get = useCallback(
+    () => legs.map((l) => store.getPrice(l.marketId, l.k) ?? '').join('|'),
+    [store, legs],
+  );
+  const signature = useSyncExternalStore(subscribe, get, get);
+  return useMemo(
+    () => signature.split('|').map((p) => (p === '' ? undefined : Number(p))),
+    [signature],
+  );
 }
 
 /** Keep a live subscription to a topic while the component is mounted. */

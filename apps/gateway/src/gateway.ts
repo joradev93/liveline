@@ -1,4 +1,4 @@
-import { FeedClient } from './feed-client.js';
+import { FeedClient } from '@liveline/feed-sim/client';
 import { TopicHub } from './hub.js';
 import { GatewayServer } from './server.js';
 import { MarketState } from './state.js';

@@ -7,7 +7,7 @@ export interface FeedClientHandlers {
 }
 
 /**
- * Consumes the feed bus. Reconnects with backoff; a gap in `seq` forces a reconnect,
+ * Consumes the feed bus (used by the gateway and the bet API). Reconnects with backoff; a gap in `seq` forces a reconnect,
  * which delivers a fresh snapshot.
  */
 export class FeedClient {

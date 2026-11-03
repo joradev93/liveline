@@ -1,0 +1,2611 @@
+{
+  "setup_data": {
+    "legs": [
+      {
+        "eventId": 2913,
+        "marketId": 36181,
+        "odds": 5.02,
+        "sel": "1"
+      },
+      {
+        "eventId": 2949,
+        "marketId": 36623,
+        "odds": 1.39,
+        "sel": "1"
+      },
+      {
+        "eventId": 3127,
+        "marketId": 38822,
+        "odds": 5.02,
+        "sel": "1"
+      },
+      {
+        "odds": 2.85,
+        "sel": "1",
+        "eventId": 3142,
+        "marketId": 39014
+      },
+      {
+        "sel": "1",
+        "eventId": 3207,
+        "marketId": 39837,
+        "odds": 2.16
+      },
+      {
+        "odds": 3.13,
+        "sel": "1",
+        "eventId": 3228,
+        "marketId": 40111
+      },
+      {
+        "marketId": 40892,
+        "odds": 2.22,
+        "sel": "1",
+        "eventId": 3290
+      },
+      {
+        "sel": "1",
+        "eventId": 3298,
+        "marketId": 40994,
+        "odds": 1.49
+      },
+      {
+        "eventId": 3353,
+        "marketId": 41727,
+        "odds": 2.54,
+        "sel": "1"
+      },
+      {
+        "eventId": 3355,
+        "marketId": 41757,
+        "odds": 1.98,
+        "sel": "1"
+      },
+      {
+        "eventId": 3364,
+        "marketId": 41864,
+        "odds": 3.92,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3379,
+        "marketId": 42028,
+        "odds": 2.35
+      },
+      {
+        "odds": 2.76,
+        "sel": "1",
+        "eventId": 3382,
+        "marketId": 42058
+      },
+      {
+        "eventId": 3409,
+        "marketId": 42395,
+        "odds": 1.91,
+        "sel": "1"
+      },
+      {
+        "eventId": 3418,
+        "marketId": 42527,
+        "odds": 3.06,
+        "sel": "1"
+      },
+      {
+        "eventId": 3424,
+        "marketId": 42606,
+        "odds": 2.02,
+        "sel": "1"
+      },
+      {
+        "eventId": 3444,
+        "marketId": 42851,
+        "odds": 5.01,
+        "sel": "1"
+      },
+      {
+        "odds": 4.68,
+        "sel": "1",
+        "eventId": 3475,
+        "marketId": 43215
+      },
+      {
+        "eventId": 3494,
+        "marketId": 43484,
+        "odds": 3.13,
+        "sel": "1"
+      },
+      {
+        "eventId": 3519,
+        "marketId": 43803,
+        "odds": 1.56,
+        "sel": "1"
+      },
+      {
+        "eventId": 3531,
+        "marketId": 43977,
+        "odds": 3.67,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3537,
+        "marketId": 44057,
+        "odds": 5.07
+      },
+      {
+        "sel": "1",
+        "eventId": 3539,
+        "marketId": 44082,
+        "odds": 1.59
+      },
+      {
+        "odds": 2.15,
+        "sel": "1",
+        "eventId": 3563,
+        "marketId": 44368
+      },
+      {
+        "eventId": 3578,
+        "marketId": 44565,
+        "odds": 3.18,
+        "sel": "1"
+      },
+      {
+        "eventId": 3592,
+        "marketId": 44727,
+        "odds": 5.52,
+        "sel": "1"
+      },
+      {
+        "eventId": 3607,
+        "marketId": 44918,
+        "odds": 2.34,
+        "sel": "1"
+      },
+      {
+        "eventId": 3615,
+        "marketId": 44992,
+        "odds": 2.89,
+        "sel": "1"
+      },
+      {
+        "eventId": 3652,
+        "marketId": 45443,
+        "odds": 3.25,
+        "sel": "1"
+      },
+      {
+        "eventId": 3657,
+        "marketId": 45497,
+        "odds": 3.44,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3681,
+        "marketId": 45774,
+        "odds": 2.24
+      },
+      {
+        "eventId": 3686,
+        "marketId": 45855,
+        "odds": 2.96,
+        "sel": "1"
+      },
+      {
+        "eventId": 3705,
+        "marketId": 46113,
+        "odds": 2.04,
+        "sel": "1"
+      },
+      {
+        "eventId": 3706,
+        "marketId": 46122,
+        "odds": 3.24,
+        "sel": "1"
+      },
+      {
+        "eventId": 3726,
+        "marketId": 46397,
+        "odds": 5.46,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3735,
+        "marketId": 46514,
+        "odds": 3.73
+      },
+      {
+        "eventId": 3741,
+        "marketId": 46602,
+        "odds": 1.51,
+        "sel": "1"
+      },
+      {
+        "eventId": 3781,
+        "marketId": 47086,
+        "odds": 1.87,
+        "sel": "1"
+      },
+      {
+        "marketId": 47191,
+        "odds": 2.21,
+        "sel": "1",
+        "eventId": 3788
+      },
+      {
+        "sel": "1",
+        "eventId": 3798,
+        "marketId": 47325,
+        "odds": 4.13
+      },
+      {
+        "eventId": 3803,
+        "marketId": 47382,
+        "odds": 4.2,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3811,
+        "marketId": 47489,
+        "odds": 2.25
+      },
+      {
+        "eventId": 3818,
+        "marketId": 47559,
+        "odds": 2.12,
+        "sel": "1"
+      },
+      {
+        "eventId": 3819,
+        "marketId": 47573,
+        "odds": 2.04,
+        "sel": "1"
+      },
+      {
+        "eventId": 3832,
+        "marketId": 47684,
+        "odds": 3.72,
+        "sel": "1"
+      },
+      {
+        "eventId": 3845,
+        "marketId": 47859,
+        "odds": 2.6,
+        "sel": "1"
+      },
+      {
+        "eventId": 3861,
+        "marketId": 48058,
+        "odds": 5.5,
+        "sel": "1"
+      },
+      {
+        "eventId": 3865,
+        "marketId": 48104,
+        "odds": 2.64,
+        "sel": "1"
+      },
+      {
+        "eventId": 3879,
+        "marketId": 48258,
+        "odds": 2.84,
+        "sel": "1"
+      },
+      {
+        "odds": 2.22,
+        "sel": "1",
+        "eventId": 3881,
+        "marketId": 48286
+      },
+      {
+        "sel": "1",
+        "eventId": 3926,
+        "marketId": 48838,
+        "odds": 2.81
+      },
+      {
+        "eventId": 3928,
+        "marketId": 48862,
+        "odds": 15.89,
+        "sel": "1"
+      },
+      {
+        "marketId": 48902,
+        "odds": 2.73,
+        "sel": "1",
+        "eventId": 3932
+      },
+      {
+        "sel": "1",
+        "eventId": 3940,
+        "marketId": 49006,
+        "odds": 2.41
+      },
+      {
+        "sel": "1",
+        "eventId": 3941,
+        "marketId": 49017,
+        "odds": 2.84
+      },
+      {
+        "eventId": 3959,
+        "marketId": 49253,
+        "odds": 2.16,
+        "sel": "1"
+      },
+      {
+        "eventId": 3970,
+        "marketId": 49413,
+        "odds": 2.38,
+        "sel": "1"
+      },
+      {
+        "eventId": 3971,
+        "marketId": 49427,
+        "odds": 3.4,
+        "sel": "1"
+      },
+      {
+        "eventId": 3974,
+        "marketId": 49467,
+        "odds": 1.98,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3980,
+        "marketId": 49519,
+        "odds": 1.97
+      },
+      {
+        "eventId": 3999,
+        "marketId": 49770,
+        "odds": 3.01,
+        "sel": "1"
+      },
+      {
+        "eventId": 4019,
+        "marketId": 50024,
+        "odds": 2.39,
+        "sel": "1"
+      },
+      {
+        "eventId": 4040,
+        "marketId": 50252,
+        "odds": 6.74,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4043,
+        "marketId": 50296,
+        "odds": 4.41
+      },
+      {
+        "eventId": 4051,
+        "marketId": 50403,
+        "odds": 3.21,
+        "sel": "1"
+      },
+      {
+        "marketId": 50584,
+        "odds": 5.76,
+        "sel": "1",
+        "eventId": 4065
+      },
+      {
+        "eventId": 4066,
+        "marketId": 50602,
+        "odds": 3.24,
+        "sel": "1"
+      },
+      {
+        "odds": 2.37,
+        "sel": "1",
+        "eventId": 4068,
+        "marketId": 50636
+      },
+      {
+        "odds": 3.12,
+        "sel": "1",
+        "eventId": 4075,
+        "marketId": 50713
+      },
+      {
+        "eventId": 4078,
+        "marketId": 50753,
+        "odds": 2.21,
+        "sel": "1"
+      },
+      {
+        "odds": 2.32,
+        "sel": "1",
+        "eventId": 4079,
+        "marketId": 50763
+      },
+      {
+        "odds": 6.37,
+        "sel": "1",
+        "eventId": 4081,
+        "marketId": 50788
+      },
+      {
+        "eventId": 4088,
+        "marketId": 50897,
+        "odds": 1.66,
+        "sel": "1"
+      },
+      {
+        "eventId": 4127,
+        "marketId": 51392,
+        "odds": 4.09,
+        "sel": "1"
+      },
+      {
+        "eventId": 4133,
+        "marketId": 51453,
+        "odds": 1.73,
+        "sel": "1"
+      },
+      {
+        "marketId": 51468,
+        "odds": 3.44,
+        "sel": "1",
+        "eventId": 4136
+      },
+      {
+        "marketId": 51526,
+        "odds": 2.52,
+        "sel": "1",
+        "eventId": 4140
+      },
+      {
+        "marketId": 51840,
+        "odds": 2.15,
+        "sel": "1",
+        "eventId": 4164
+      },
+      {
+        "marketId": 51963,
+        "odds": 1.67,
+        "sel": "1",
+        "eventId": 4176
+      },
+      {
+        "eventId": 4185,
+        "marketId": 52081,
+        "odds": 3.27,
+        "sel": "1"
+      },
+      {
+        "eventId": 4186,
+        "marketId": 52087,
+        "odds": 3.73,
+        "sel": "1"
+      },
+      {
+        "eventId": 4189,
+        "marketId": 52119,
+        "odds": 3.5,
+        "sel": "1"
+      },
+      {
+        "eventId": 4200,
+        "marketId": 52269,
+        "odds": 1.46,
+        "sel": "1"
+      },
+      {
+        "eventId": 4204,
+        "marketId": 52309,
+        "odds": 2.39,
+        "sel": "1"
+      },
+      {
+        "eventId": 4217,
+        "marketId": 52508,
+        "odds": 3.67,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4227,
+        "marketId": 52652,
+        "odds": 2.99
+      },
+      {
+        "odds": 1.53,
+        "sel": "1",
+        "eventId": 4246,
+        "marketId": 52892
+      },
+      {
+        "marketId": 52925,
+        "odds": 2.36,
+        "sel": "1",
+        "eventId": 4249
+      },
+      {
+        "odds": 1.75,
+        "sel": "1",
+        "eventId": 4252,
+        "marketId": 52963
+      },
+      {
+        "marketId": 53151,
+        "odds": 4.78,
+        "sel": "1",
+        "eventId": 4268
+      },
+      {
+        "odds": 3.04,
+        "sel": "1",
+        "eventId": 4270,
+        "marketId": 53188
+      },
+      {
+        "eventId": 4275,
+        "marketId": 53268,
+        "odds": 2.25,
+        "sel": "1"
+      },
+      {
+        "eventId": 4276,
+        "marketId": 53286,
+        "odds": 1.77,
+        "sel": "1"
+      },
+      {
+        "eventId": 4281,
+        "marketId": 53342,
+        "odds": 3.84,
+        "sel": "1"
+      },
+      {
+        "odds": 2.66,
+        "sel": "1",
+        "eventId": 4295,
+        "marketId": 53525
+      },
+      {
+        "eventId": 4307,
+        "marketId": 53643,
+        "odds": 3.14,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4312,
+        "marketId": 53708,
+        "odds": 2.25
+      },
+      {
+        "eventId": 4323,
+        "marketId": 53859,
+        "odds": 2.02,
+        "sel": "1"
+      },
+      {
+        "eventId": 4327,
+        "marketId": 53909,
+        "odds": 1.45,
+        "sel": "1"
+      },
+      {
+        "eventId": 4352,
+        "marketId": 54239,
+        "odds": 7.02,
+        "sel": "1"
+      },
+      {
+        "eventId": 4356,
+        "marketId": 54263,
+        "odds": 3.31,
+        "sel": "1"
+      },
+      {
+        "eventId": 4358,
+        "marketId": 54296,
+        "odds": 3.31,
+        "sel": "1"
+      },
+      {
+        "eventId": 4360,
+        "marketId": 54327,
+        "odds": 2.93,
+        "sel": "1"
+      },
+      {
+        "eventId": 4371,
+        "marketId": 54448,
+        "odds": 2.46,
+        "sel": "1"
+      },
+      {
+        "eventId": 4382,
+        "marketId": 54571,
+        "odds": 1.92,
+        "sel": "1"
+      },
+      {
+        "eventId": 4383,
+        "marketId": 54582,
+        "odds": 1.73,
+        "sel": "1"
+      },
+      {
+        "marketId": 54598,
+        "odds": 3.45,
+        "sel": "1",
+        "eventId": 4384
+      },
+      {
+        "eventId": 4391,
+        "marketId": 54675,
+        "odds": 3.39,
+        "sel": "1"
+      },
+      {
+        "eventId": 4423,
+        "marketId": 55045,
+        "odds": 2.6,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4425,
+        "marketId": 55057,
+        "odds": 1.91
+      },
+      {
+        "eventId": 4439,
+        "marketId": 55243,
+        "odds": 4.64,
+        "sel": "1"
+      },
+      {
+        "eventId": 4467,
+        "marketId": 55562,
+        "odds": 2.7,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4469,
+        "marketId": 55585,
+        "odds": 2.99
+      },
+      {
+        "eventId": 4470,
+        "marketId": 55599,
+        "odds": 3.08,
+        "sel": "1"
+      },
+      {
+        "odds": 2.84,
+        "sel": "1",
+        "eventId": 4484,
+        "marketId": 55775
+      },
+      {
+        "marketId": 55978,
+        "odds": 6.19,
+        "sel": "1",
+        "eventId": 4503
+      },
+      {
+        "eventId": 4508,
+        "marketId": 56061,
+        "odds": 4.06,
+        "sel": "1"
+      },
+      {
+        "eventId": 4511,
+        "marketId": 56094,
+        "odds": 2.38,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4521,
+        "marketId": 56211,
+        "odds": 2.64
+      },
+      {
+        "eventId": 4522,
+        "marketId": 56220,
+        "odds": 1.79,
+        "sel": "1"
+      },
+      {
+        "odds": 6.16,
+        "sel": "1",
+        "eventId": 4533,
+        "marketId": 56354
+      },
+      {
+        "eventId": 4539,
+        "marketId": 56443,
+        "odds": 1.57,
+        "sel": "1"
+      },
+      {
+        "eventId": 4549,
+        "marketId": 56582,
+        "odds": 1.98,
+        "sel": "1"
+      },
+      {
+        "eventId": 2971,
+        "marketId": 36889,
+        "odds": 2.11,
+        "sel": "1"
+      },
+      {
+        "eventId": 3108,
+        "marketId": 38624,
+        "odds": 1.7,
+        "sel": "1"
+      },
+      {
+        "eventId": 3123,
+        "marketId": 38798,
+        "odds": 1.05,
+        "sel": "1"
+      },
+      {
+        "marketId": 40390,
+        "odds": 1.8,
+        "sel": "1",
+        "eventId": 3251
+      },
+      {
+        "eventId": 3265,
+        "marketId": 40571,
+        "odds": 1.34,
+        "sel": "1"
+      },
+      {
+        "eventId": 3281,
+        "marketId": 40760,
+        "odds": 2.6,
+        "sel": "1"
+      },
+      {
+        "eventId": 3282,
+        "marketId": 40778,
+        "odds": 1.26,
+        "sel": "1"
+      },
+      {
+        "eventId": 3375,
+        "marketId": 41982,
+        "odds": 2.35,
+        "sel": "1"
+      },
+      {
+        "odds": 1.6,
+        "sel": "1",
+        "eventId": 3383,
+        "marketId": 42067
+      },
+      {
+        "eventId": 3385,
+        "marketId": 42082,
+        "odds": 1.38,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3413,
+        "marketId": 42451,
+        "odds": 1.96
+      },
+      {
+        "eventId": 3420,
+        "marketId": 42554,
+        "odds": 2.45,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3428,
+        "marketId": 42645,
+        "odds": 4.08
+      },
+      {
+        "eventId": 3432,
+        "marketId": 42693,
+        "odds": 2.84,
+        "sel": "1"
+      },
+      {
+        "eventId": 3440,
+        "marketId": 42804,
+        "odds": 1.62,
+        "sel": "1"
+      },
+      {
+        "eventId": 3446,
+        "marketId": 42879,
+        "odds": 1.45,
+        "sel": "1"
+      },
+      {
+        "eventId": 3490,
+        "marketId": 43425,
+        "odds": 1.61,
+        "sel": "1"
+      },
+      {
+        "marketId": 43742,
+        "odds": 6.28,
+        "sel": "1",
+        "eventId": 3514
+      },
+      {
+        "eventId": 3527,
+        "marketId": 43933,
+        "odds": 1.25,
+        "sel": "1"
+      },
+      {
+        "odds": 1.91,
+        "sel": "1",
+        "eventId": 3538,
+        "marketId": 44076
+      },
+      {
+        "eventId": 3572,
+        "marketId": 44474,
+        "odds": 1.14,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3653,
+        "marketId": 45454,
+        "odds": 4.01
+      },
+      {
+        "eventId": 3660,
+        "marketId": 45521,
+        "odds": 1.85,
+        "sel": "1"
+      },
+      {
+        "odds": 1.46,
+        "sel": "1",
+        "eventId": 3696,
+        "marketId": 45979
+      },
+      {
+        "marketId": 46006,
+        "odds": 2.17,
+        "sel": "1",
+        "eventId": 3698
+      },
+      {
+        "eventId": 3709,
+        "marketId": 46163,
+        "odds": 1.53,
+        "sel": "1"
+      },
+      {
+        "eventId": 3710,
+        "marketId": 46176,
+        "odds": 2.99,
+        "sel": "1"
+      },
+      {
+        "eventId": 3715,
+        "marketId": 46239,
+        "odds": 1.83,
+        "sel": "1"
+      },
+      {
+        "eventId": 3717,
+        "marketId": 46271,
+        "odds": 1.8,
+        "sel": "1"
+      },
+      {
+        "eventId": 3719,
+        "marketId": 46306,
+        "odds": 2.03,
+        "sel": "1"
+      },
+      {
+        "marketId": 46736,
+        "odds": 2.48,
+        "sel": "1",
+        "eventId": 3751
+      },
+      {
+        "eventId": 3773,
+        "marketId": 46994,
+        "odds": 1.92,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3776,
+        "marketId": 47020,
+        "odds": 1.45
+      },
+      {
+        "eventId": 3863,
+        "marketId": 48089,
+        "odds": 2.23,
+        "sel": "1"
+      },
+      {
+        "eventId": 3880,
+        "marketId": 48271,
+        "odds": 3.37,
+        "sel": "1"
+      },
+      {
+        "eventId": 3890,
+        "marketId": 48423,
+        "odds": 1.45,
+        "sel": "1"
+      },
+      {
+        "eventId": 3892,
+        "marketId": 48448,
+        "odds": 2.21,
+        "sel": "1"
+      },
+      {
+        "eventId": 3911,
+        "marketId": 48689,
+        "odds": 1.68,
+        "sel": "1"
+      },
+      {
+        "eventId": 3913,
+        "marketId": 48707,
+        "odds": 2.08,
+        "sel": "1"
+      },
+      {
+        "eventId": 3916,
+        "marketId": 48734,
+        "odds": 2.01,
+        "sel": "1"
+      },
+      {
+        "eventId": 3918,
+        "marketId": 48759,
+        "odds": 3.56,
+        "sel": "1"
+      },
+      {
+        "eventId": 3946,
+        "marketId": 49089,
+        "odds": 1.51,
+        "sel": "1"
+      },
+      {
+        "odds": 1.65,
+        "sel": "1",
+        "eventId": 3967,
+        "marketId": 49366
+      },
+      {
+        "eventId": 3982,
+        "marketId": 49545,
+        "odds": 2.25,
+        "sel": "1"
+      },
+      {
+        "eventId": 3990,
+        "marketId": 49633,
+        "odds": 1.13,
+        "sel": "1"
+      },
+      {
+        "eventId": 3992,
+        "marketId": 49659,
+        "odds": 1.62,
+        "sel": "1"
+      },
+      {
+        "eventId": 3997,
+        "marketId": 49742,
+        "odds": 2.74,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4001,
+        "marketId": 49796,
+        "odds": 5.2
+      },
+      {
+        "sel": "1",
+        "eventId": 4006,
+        "marketId": 49850,
+        "odds": 2.13
+      },
+      {
+        "sel": "1",
+        "eventId": 4013,
+        "marketId": 49940,
+        "odds": 1.75
+      },
+      {
+        "eventId": 4014,
+        "marketId": 49950,
+        "odds": 2.45,
+        "sel": "1"
+      },
+      {
+        "eventId": 4045,
+        "marketId": 50319,
+        "odds": 1.94,
+        "sel": "1"
+      },
+      {
+        "eventId": 4050,
+        "marketId": 50383,
+        "odds": 1.74,
+        "sel": "1"
+      },
+      {
+        "eventId": 4055,
+        "marketId": 50439,
+        "odds": 1.09,
+        "sel": "1"
+      },
+      {
+        "marketId": 50547,
+        "odds": 1.38,
+        "sel": "1",
+        "eventId": 4062
+      },
+      {
+        "sel": "1",
+        "eventId": 4071,
+        "marketId": 50676,
+        "odds": 2.13
+      },
+      {
+        "eventId": 4080,
+        "marketId": 50771,
+        "odds": 7.09,
+        "sel": "1"
+      },
+      {
+        "marketId": 50841,
+        "odds": 1.62,
+        "sel": "1",
+        "eventId": 4084
+      },
+      {
+        "odds": 5.35,
+        "sel": "1",
+        "eventId": 4086,
+        "marketId": 50866
+      },
+      {
+        "eventId": 4087,
+        "marketId": 50885,
+        "odds": 1.9,
+        "sel": "1"
+      },
+      {
+        "eventId": 4092,
+        "marketId": 50957,
+        "odds": 1.76,
+        "sel": "1"
+      },
+      {
+        "eventId": 4102,
+        "marketId": 51088,
+        "odds": 1.67,
+        "sel": "1"
+      },
+      {
+        "eventId": 4103,
+        "marketId": 51101,
+        "odds": 4.14,
+        "sel": "1"
+      },
+      {
+        "eventId": 4104,
+        "marketId": 51112,
+        "odds": 2.05,
+        "sel": "1"
+      },
+      {
+        "eventId": 4105,
+        "marketId": 51131,
+        "odds": 2.14,
+        "sel": "1"
+      },
+      {
+        "eventId": 4107,
+        "marketId": 51166,
+        "odds": 3.65,
+        "sel": "1"
+      },
+      {
+        "marketId": 51227,
+        "odds": 1.8,
+        "sel": "1",
+        "eventId": 4112
+      },
+      {
+        "odds": 1.92,
+        "sel": "1",
+        "eventId": 4116,
+        "marketId": 51262
+      },
+      {
+        "eventId": 4118,
+        "marketId": 51282,
+        "odds": 3.46,
+        "sel": "1"
+      },
+      {
+        "eventId": 4131,
+        "marketId": 51433,
+        "odds": 1.3,
+        "sel": "1"
+      },
+      {
+        "eventId": 4147,
+        "marketId": 51601,
+        "odds": 1.63,
+        "sel": "1"
+      },
+      {
+        "eventId": 4159,
+        "marketId": 51766,
+        "odds": 1.13,
+        "sel": "1"
+      },
+      {
+        "odds": 1.98,
+        "sel": "1",
+        "eventId": 4163,
+        "marketId": 51820
+      },
+      {
+        "eventId": 4166,
+        "marketId": 51865,
+        "odds": 1.24,
+        "sel": "1"
+      },
+      {
+        "eventId": 4175,
+        "marketId": 51955,
+        "odds": 1.28,
+        "sel": "1"
+      },
+      {
+        "eventId": 4180,
+        "marketId": 52015,
+        "odds": 1.22,
+        "sel": "1"
+      },
+      {
+        "marketId": 52041,
+        "odds": 4.02,
+        "sel": "1",
+        "eventId": 4182
+      },
+      {
+        "eventId": 4190,
+        "marketId": 52139,
+        "odds": 2.83,
+        "sel": "1"
+      },
+      {
+        "eventId": 4195,
+        "marketId": 52193,
+        "odds": 2.05,
+        "sel": "1"
+      },
+      {
+        "eventId": 4199,
+        "marketId": 52252,
+        "odds": 2.02,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4201,
+        "marketId": 52279,
+        "odds": 1.31
+      },
+      {
+        "eventId": 4211,
+        "marketId": 52415,
+        "odds": 2.18,
+        "sel": "1"
+      },
+      {
+        "eventId": 4213,
+        "marketId": 52444,
+        "odds": 1.78,
+        "sel": "1"
+      },
+      {
+        "eventId": 4220,
+        "marketId": 52550,
+        "odds": 2.2,
+        "sel": "1"
+      },
+      {
+        "marketId": 52558,
+        "odds": 2.52,
+        "sel": "1",
+        "eventId": 4221
+      },
+      {
+        "sel": "1",
+        "eventId": 4224,
+        "marketId": 52611,
+        "odds": 1.37
+      },
+      {
+        "sel": "1",
+        "eventId": 4226,
+        "marketId": 52644,
+        "odds": 2.74
+      },
+      {
+        "eventId": 4232,
+        "marketId": 52713,
+        "odds": 3.22,
+        "sel": "1"
+      },
+      {
+        "odds": 1.26,
+        "sel": "1",
+        "eventId": 4235,
+        "marketId": 52746
+      },
+      {
+        "marketId": 52813,
+        "odds": 1.2,
+        "sel": "1",
+        "eventId": 4239
+      },
+      {
+        "eventId": 4242,
+        "marketId": 52842,
+        "odds": 1.53,
+        "sel": "1"
+      },
+      {
+        "eventId": 4244,
+        "marketId": 52872,
+        "odds": 1.58,
+        "sel": "1"
+      },
+      {
+        "eventId": 4266,
+        "marketId": 53124,
+        "odds": 1.71,
+        "sel": "1"
+      },
+      {
+        "eventId": 4267,
+        "marketId": 53143,
+        "odds": 1.62,
+        "sel": "1"
+      },
+      {
+        "eventId": 4277,
+        "marketId": 53297,
+        "odds": 2.13,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4300,
+        "marketId": 53568,
+        "odds": 2.03
+      },
+      {
+        "eventId": 4302,
+        "marketId": 53582,
+        "odds": 2.68,
+        "sel": "1"
+      },
+      {
+        "eventId": 4303,
+        "marketId": 53587,
+        "odds": 1.27,
+        "sel": "1"
+      },
+      {
+        "eventId": 4309,
+        "marketId": 53672,
+        "odds": 2.64,
+        "sel": "1"
+      },
+      {
+        "eventId": 4314,
+        "marketId": 53736,
+        "odds": 3.27,
+        "sel": "1"
+      },
+      {
+        "eventId": 4321,
+        "marketId": 53822,
+        "odds": 4.25,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4337,
+        "marketId": 54053,
+        "odds": 2.03
+      },
+      {
+        "eventId": 4341,
+        "marketId": 54097,
+        "odds": 1.7,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4342,
+        "marketId": 54110,
+        "odds": 1.42
+      },
+      {
+        "marketId": 54200,
+        "odds": 1.24,
+        "sel": "1",
+        "eventId": 4349
+      },
+      {
+        "eventId": 4354,
+        "marketId": 54251,
+        "odds": 5.22,
+        "sel": "1"
+      },
+      {
+        "odds": 2.75,
+        "sel": "1",
+        "eventId": 4359,
+        "marketId": 54308
+      },
+      {
+        "eventId": 4361,
+        "marketId": 54337,
+        "odds": 1.28,
+        "sel": "1"
+      },
+      {
+        "marketId": 54372,
+        "odds": 1.68,
+        "sel": "1",
+        "eventId": 4364
+      },
+      {
+        "odds": 1.5,
+        "sel": "1",
+        "eventId": 4368,
+        "marketId": 54406
+      },
+      {
+        "eventId": 4377,
+        "marketId": 54518,
+        "odds": 1.97,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4400,
+        "marketId": 54771,
+        "odds": 4.45
+      },
+      {
+        "eventId": 4410,
+        "marketId": 54876,
+        "odds": 1.76,
+        "sel": "1"
+      },
+      {
+        "eventId": 4414,
+        "marketId": 54929,
+        "odds": 1.1,
+        "sel": "1"
+      },
+      {
+        "eventId": 4415,
+        "marketId": 54949,
+        "odds": 3.88,
+        "sel": "1"
+      },
+      {
+        "odds": 2.32,
+        "sel": "1",
+        "eventId": 4416,
+        "marketId": 54964
+      },
+      {
+        "eventId": 4443,
+        "marketId": 55289,
+        "odds": 1.52,
+        "sel": "1"
+      },
+      {
+        "eventId": 4476,
+        "marketId": 55678,
+        "odds": 1.33,
+        "sel": "1"
+      },
+      {
+        "eventId": 4487,
+        "marketId": 55823,
+        "odds": 1.96,
+        "sel": "1"
+      },
+      {
+        "odds": 1.5,
+        "sel": "1",
+        "eventId": 4488,
+        "marketId": 55834
+      },
+      {
+        "eventId": 4489,
+        "marketId": 55845,
+        "odds": 1.27,
+        "sel": "1"
+      },
+      {
+        "eventId": 4493,
+        "marketId": 55883,
+        "odds": 1.82,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4500,
+        "marketId": 55949,
+        "odds": 2.59
+      },
+      {
+        "marketId": 55954,
+        "odds": 2.23,
+        "sel": "1",
+        "eventId": 4501
+      },
+      {
+        "eventId": 4504,
+        "marketId": 55987,
+        "odds": 1.28,
+        "sel": "1"
+      },
+      {
+        "eventId": 4527,
+        "marketId": 56276,
+        "odds": 1.73,
+        "sel": "1"
+      },
+      {
+        "eventId": 4528,
+        "marketId": 56291,
+        "odds": 1.71,
+        "sel": "1"
+      },
+      {
+        "eventId": 4532,
+        "marketId": 56336,
+        "odds": 1.76,
+        "sel": "1"
+      },
+      {
+        "eventId": 4534,
+        "marketId": 56369,
+        "odds": 1.12,
+        "sel": "1"
+      },
+      {
+        "marketId": 56380,
+        "odds": 1.5,
+        "sel": "1",
+        "eventId": 4535
+      },
+      {
+        "sel": "1",
+        "eventId": 4542,
+        "marketId": 56491,
+        "odds": 2.63
+      },
+      {
+        "eventId": 4543,
+        "marketId": 56499,
+        "odds": 1.31,
+        "sel": "1"
+      },
+      {
+        "eventId": 4548,
+        "marketId": 56565,
+        "odds": 1.84,
+        "sel": "1"
+      },
+      {
+        "eventId": 2950,
+        "marketId": 36637,
+        "odds": 2.32,
+        "sel": "1"
+      },
+      {
+        "eventId": 2982,
+        "marketId": 37022,
+        "odds": 3.86,
+        "sel": "1"
+      },
+      {
+        "eventId": 3103,
+        "marketId": 38555,
+        "odds": 1.88,
+        "sel": "1"
+      },
+      {
+        "eventId": 3155,
+        "marketId": 39203,
+        "odds": 2.24,
+        "sel": "1"
+      },
+      {
+        "eventId": 3156,
+        "marketId": 39216,
+        "odds": 2.69,
+        "sel": "1"
+      },
+      {
+        "eventId": 3163,
+        "marketId": 39290,
+        "odds": 1.41,
+        "sel": "1"
+      },
+      {
+        "eventId": 3178,
+        "marketId": 39501,
+        "odds": 1.39,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3188,
+        "marketId": 39634,
+        "odds": 4.58
+      },
+      {
+        "eventId": 3189,
+        "marketId": 39641,
+        "odds": 2.29,
+        "sel": "1"
+      },
+      {
+        "eventId": 3197,
+        "marketId": 39720,
+        "odds": 1.12,
+        "sel": "1"
+      },
+      {
+        "odds": 1.96,
+        "sel": "1",
+        "eventId": 3230,
+        "marketId": 40147
+      },
+      {
+        "eventId": 3239,
+        "marketId": 40235,
+        "odds": 4.2,
+        "sel": "1"
+      },
+      {
+        "eventId": 3302,
+        "marketId": 41036,
+        "odds": 1.75,
+        "sel": "1"
+      },
+      {
+        "marketId": 41041,
+        "odds": 1.19,
+        "sel": "1",
+        "eventId": 3303
+      },
+      {
+        "eventId": 3314,
+        "marketId": 41162,
+        "odds": 2.49,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3386,
+        "marketId": 42093,
+        "odds": 3.43
+      },
+      {
+        "eventId": 3393,
+        "marketId": 42192,
+        "odds": 3.33,
+        "sel": "1"
+      },
+      {
+        "eventId": 3395,
+        "marketId": 42211,
+        "odds": 2.03,
+        "sel": "1"
+      },
+      {
+        "odds": 1.53,
+        "sel": "1",
+        "eventId": 3411,
+        "marketId": 42415
+      },
+      {
+        "eventId": 3447,
+        "marketId": 42896,
+        "odds": 1.59,
+        "sel": "1"
+      },
+      {
+        "eventId": 3473,
+        "marketId": 43197,
+        "odds": 4.69,
+        "sel": "1"
+      },
+      {
+        "marketId": 43589,
+        "odds": 1.82,
+        "sel": "1",
+        "eventId": 3502
+      },
+      {
+        "odds": 1.25,
+        "sel": "1",
+        "eventId": 3533,
+        "marketId": 44001
+      },
+      {
+        "marketId": 44119,
+        "odds": 2,
+        "sel": "1",
+        "eventId": 3542
+      },
+      {
+        "sel": "1",
+        "eventId": 3624,
+        "marketId": 45108,
+        "odds": 2.24
+      },
+      {
+        "eventId": 3637,
+        "marketId": 45268,
+        "odds": 1.79,
+        "sel": "1"
+      },
+      {
+        "odds": 1.52,
+        "sel": "1",
+        "eventId": 3674,
+        "marketId": 45687
+      },
+      {
+        "sel": "1",
+        "eventId": 3763,
+        "marketId": 46869,
+        "odds": 2.72
+      },
+      {
+        "eventId": 3765,
+        "marketId": 46893,
+        "odds": 1.72,
+        "sel": "1"
+      },
+      {
+        "eventId": 3771,
+        "marketId": 46974,
+        "odds": 1.73,
+        "sel": "1"
+      },
+      {
+        "eventId": 3793,
+        "marketId": 47254,
+        "odds": 2.79,
+        "sel": "1"
+      },
+      {
+        "eventId": 3812,
+        "marketId": 47494,
+        "odds": 2.73,
+        "sel": "1"
+      },
+      {
+        "eventId": 3815,
+        "marketId": 47534,
+        "odds": 2.36,
+        "sel": "1"
+      },
+      {
+        "eventId": 3830,
+        "marketId": 47656,
+        "odds": 2.71,
+        "sel": "1"
+      },
+      {
+        "eventId": 3837,
+        "marketId": 47747,
+        "odds": 2.59,
+        "sel": "1"
+      },
+      {
+        "odds": 1.63,
+        "sel": "1",
+        "eventId": 3849,
+        "marketId": 47914
+      },
+      {
+        "eventId": 3850,
+        "marketId": 47922,
+        "odds": 2.78,
+        "sel": "1"
+      },
+      {
+        "eventId": 3855,
+        "marketId": 47969,
+        "odds": 1.53,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3860,
+        "marketId": 48039,
+        "odds": 2.16
+      },
+      {
+        "eventId": 3862,
+        "marketId": 48069,
+        "odds": 4.58,
+        "sel": "1"
+      },
+      {
+        "eventId": 3874,
+        "marketId": 48217,
+        "odds": 2.76,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3884,
+        "marketId": 48327,
+        "odds": 1.77
+      },
+      {
+        "eventId": 3887,
+        "marketId": 48372,
+        "odds": 1.92,
+        "sel": "1"
+      },
+      {
+        "eventId": 3902,
+        "marketId": 48581,
+        "odds": 1.22,
+        "sel": "1"
+      },
+      {
+        "eventId": 3942,
+        "marketId": 49025,
+        "odds": 2.37,
+        "sel": "1"
+      },
+      {
+        "odds": 1.21,
+        "sel": "1",
+        "eventId": 3947,
+        "marketId": 49105
+      },
+      {
+        "eventId": 3958,
+        "marketId": 49238,
+        "odds": 1.24,
+        "sel": "1"
+      },
+      {
+        "eventId": 3963,
+        "marketId": 49296,
+        "odds": 1.3,
+        "sel": "1"
+      },
+      {
+        "eventId": 3965,
+        "marketId": 49336,
+        "odds": 1.2,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 3966,
+        "marketId": 49352,
+        "odds": 2
+      },
+      {
+        "sel": "1",
+        "eventId": 3983,
+        "marketId": 49560,
+        "odds": 1.7
+      },
+      {
+        "sel": "1",
+        "eventId": 3988,
+        "marketId": 49608,
+        "odds": 2.11
+      },
+      {
+        "odds": 1.99,
+        "sel": "1",
+        "eventId": 3989,
+        "marketId": 49618
+      },
+      {
+        "eventId": 3991,
+        "marketId": 49640,
+        "odds": 2.06,
+        "sel": "1"
+      },
+      {
+        "eventId": 3993,
+        "marketId": 49674,
+        "odds": 1.1,
+        "sel": "1"
+      },
+      {
+        "eventId": 3995,
+        "marketId": 49709,
+        "odds": 2.25,
+        "sel": "1"
+      },
+      {
+        "eventId": 3998,
+        "marketId": 49752,
+        "odds": 2.35,
+        "sel": "1"
+      },
+      {
+        "eventId": 4005,
+        "marketId": 49838,
+        "odds": 1.73,
+        "sel": "1"
+      },
+      {
+        "eventId": 4007,
+        "marketId": 49855,
+        "odds": 1.61,
+        "sel": "1"
+      },
+      {
+        "odds": 1.71,
+        "sel": "1",
+        "eventId": 4011,
+        "marketId": 49911
+      },
+      {
+        "eventId": 4033,
+        "marketId": 50169,
+        "odds": 3.22,
+        "sel": "1"
+      },
+      {
+        "eventId": 4036,
+        "marketId": 50204,
+        "odds": 2.1,
+        "sel": "1"
+      },
+      {
+        "marketId": 50358,
+        "odds": 3.74,
+        "sel": "1",
+        "eventId": 4048
+      },
+      {
+        "marketId": 50411,
+        "odds": 1.44,
+        "sel": "1",
+        "eventId": 4052
+      },
+      {
+        "eventId": 4057,
+        "marketId": 50473,
+        "odds": 2.19,
+        "sel": "1"
+      },
+      {
+        "marketId": 50488,
+        "odds": 3.65,
+        "sel": "1",
+        "eventId": 4058
+      },
+      {
+        "eventId": 4059,
+        "marketId": 50503,
+        "odds": 1.72,
+        "sel": "1"
+      },
+      {
+        "eventId": 4072,
+        "marketId": 50688,
+        "odds": 2.61,
+        "sel": "1"
+      },
+      {
+        "eventId": 4074,
+        "marketId": 50705,
+        "odds": 1.44,
+        "sel": "1"
+      },
+      {
+        "eventId": 4077,
+        "marketId": 50734,
+        "odds": 2.01,
+        "sel": "1"
+      },
+      {
+        "eventId": 4082,
+        "marketId": 50806,
+        "odds": 1.71,
+        "sel": "1"
+      },
+      {
+        "marketId": 50826,
+        "odds": 1.46,
+        "sel": "1",
+        "eventId": 4083
+      },
+      {
+        "eventId": 4085,
+        "marketId": 50860,
+        "odds": 1.66,
+        "sel": "1"
+      },
+      {
+        "odds": 2.03,
+        "sel": "1",
+        "eventId": 4089,
+        "marketId": 50917
+      },
+      {
+        "eventId": 4096,
+        "marketId": 51021,
+        "odds": 2.33,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4108,
+        "marketId": 51174,
+        "odds": 1.39
+      },
+      {
+        "eventId": 4109,
+        "marketId": 51187,
+        "odds": 8.07,
+        "sel": "1"
+      },
+      {
+        "marketId": 51244,
+        "odds": 2.62,
+        "sel": "1",
+        "eventId": 4113
+      },
+      {
+        "eventId": 4115,
+        "marketId": 51256,
+        "odds": 1.92,
+        "sel": "1"
+      },
+      {
+        "eventId": 4119,
+        "marketId": 51293,
+        "odds": 2.75,
+        "sel": "1"
+      },
+      {
+        "odds": 7.67,
+        "sel": "1",
+        "eventId": 4154,
+        "marketId": 51690
+      },
+      {
+        "odds": 1.53,
+        "sel": "1",
+        "eventId": 4191,
+        "marketId": 52145
+      },
+      {
+        "marketId": 52182,
+        "odds": 1.95,
+        "sel": "1",
+        "eventId": 4194
+      },
+      {
+        "eventId": 4197,
+        "marketId": 52219,
+        "odds": 2.85,
+        "sel": "1"
+      },
+      {
+        "eventId": 4208,
+        "marketId": 52359,
+        "odds": 2.55,
+        "sel": "1"
+      },
+      {
+        "eventId": 4216,
+        "marketId": 52494,
+        "odds": 2.02,
+        "sel": "1"
+      },
+      {
+        "marketId": 52526,
+        "odds": 2.03,
+        "sel": "1",
+        "eventId": 4218
+      },
+      {
+        "marketId": 52760,
+        "odds": 1.16,
+        "sel": "1",
+        "eventId": 4236
+      },
+      {
+        "eventId": 4237,
+        "marketId": 52778,
+        "odds": 1.77,
+        "sel": "1"
+      },
+      {
+        "eventId": 4247,
+        "marketId": 52907,
+        "odds": 1.92,
+        "sel": "1"
+      },
+      {
+        "eventId": 4251,
+        "marketId": 52958,
+        "odds": 2.01,
+        "sel": "1"
+      },
+      {
+        "eventId": 4257,
+        "marketId": 53009,
+        "odds": 1.62,
+        "sel": "1"
+      },
+      {
+        "eventId": 4265,
+        "marketId": 53117,
+        "odds": 2.66,
+        "sel": "1"
+      },
+      {
+        "eventId": 4269,
+        "marketId": 53169,
+        "odds": 1.36,
+        "sel": "1"
+      },
+      {
+        "eventId": 4272,
+        "marketId": 53222,
+        "odds": 2.06,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4280,
+        "marketId": 53332,
+        "odds": 1.48
+      },
+      {
+        "marketId": 53404,
+        "odds": 2.71,
+        "sel": "1",
+        "eventId": 4285
+      },
+      {
+        "eventId": 4287,
+        "marketId": 53417,
+        "odds": 1.36,
+        "sel": "1"
+      },
+      {
+        "marketId": 53491,
+        "odds": 1.63,
+        "sel": "1",
+        "eventId": 4292
+      },
+      {
+        "eventId": 4294,
+        "marketId": 53509,
+        "odds": 2.71,
+        "sel": "1"
+      },
+      {
+        "eventId": 4296,
+        "marketId": 53533,
+        "odds": 1.64,
+        "sel": "1"
+      },
+      {
+        "eventId": 4301,
+        "marketId": 53575,
+        "odds": 2.77,
+        "sel": "1"
+      },
+      {
+        "odds": 3.21,
+        "sel": "1",
+        "eventId": 4315,
+        "marketId": 53743
+      },
+      {
+        "eventId": 4316,
+        "marketId": 53752,
+        "odds": 1.91,
+        "sel": "1"
+      },
+      {
+        "eventId": 4318,
+        "marketId": 53782,
+        "odds": 1.21,
+        "sel": "1"
+      },
+      {
+        "eventId": 4319,
+        "marketId": 53788,
+        "odds": 5.16,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4320,
+        "marketId": 53807,
+        "odds": 1.7
+      },
+      {
+        "eventId": 4322,
+        "marketId": 53842,
+        "odds": 1.27,
+        "sel": "1"
+      },
+      {
+        "marketId": 53872,
+        "odds": 1.14,
+        "sel": "1",
+        "eventId": 4324
+      },
+      {
+        "marketId": 53965,
+        "odds": 1.97,
+        "sel": "1",
+        "eventId": 4331
+      },
+      {
+        "eventId": 4333,
+        "marketId": 54004,
+        "odds": 2.51,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4334,
+        "marketId": 54009,
+        "odds": 1.81
+      },
+      {
+        "sel": "1",
+        "eventId": 4336,
+        "marketId": 54038,
+        "odds": 1.47
+      },
+      {
+        "marketId": 54128,
+        "odds": 3.07,
+        "sel": "1",
+        "eventId": 4344
+      },
+      {
+        "marketId": 54145,
+        "odds": 1.91,
+        "sel": "1",
+        "eventId": 4345
+      },
+      {
+        "marketId": 54172,
+        "odds": 1.74,
+        "sel": "1",
+        "eventId": 4347
+      },
+      {
+        "sel": "1",
+        "eventId": 4348,
+        "marketId": 54181,
+        "odds": 2.02
+      },
+      {
+        "sel": "1",
+        "eventId": 4363,
+        "marketId": 54360,
+        "odds": 2.16
+      },
+      {
+        "odds": 1.58,
+        "sel": "1",
+        "eventId": 4373,
+        "marketId": 54464
+      },
+      {
+        "marketId": 54789,
+        "odds": 1.78,
+        "sel": "1",
+        "eventId": 4402
+      },
+      {
+        "eventId": 4406,
+        "marketId": 54835,
+        "odds": 1.48,
+        "sel": "1"
+      },
+      {
+        "eventId": 4407,
+        "marketId": 54847,
+        "odds": 1.65,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4408,
+        "marketId": 54858,
+        "odds": 2.01
+      },
+      {
+        "eventId": 4411,
+        "marketId": 54883,
+        "odds": 3.59,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4412,
+        "marketId": 54894,
+        "odds": 1.31
+      },
+      {
+        "eventId": 4413,
+        "marketId": 54910,
+        "odds": 1.83,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4417,
+        "marketId": 54978,
+        "odds": 2.28
+      },
+      {
+        "eventId": 4419,
+        "marketId": 55006,
+        "odds": 2.52,
+        "sel": "1"
+      },
+      {
+        "eventId": 4429,
+        "marketId": 55097,
+        "odds": 2.38,
+        "sel": "1"
+      },
+      {
+        "marketId": 55115,
+        "odds": 2.57,
+        "sel": "1",
+        "eventId": 4430
+      },
+      {
+        "sel": "1",
+        "eventId": 4431,
+        "marketId": 55134,
+        "odds": 1.58
+      },
+      {
+        "marketId": 55153,
+        "odds": 1.16,
+        "sel": "1",
+        "eventId": 4432
+      },
+      {
+        "eventId": 4434,
+        "marketId": 55189,
+        "odds": 4.53,
+        "sel": "1"
+      },
+      {
+        "eventId": 4446,
+        "marketId": 55314,
+        "odds": 1.17,
+        "sel": "1"
+      },
+      {
+        "eventId": 4450,
+        "marketId": 55354,
+        "odds": 1.75,
+        "sel": "1"
+      },
+      {
+        "eventId": 4452,
+        "marketId": 55369,
+        "odds": 4.53,
+        "sel": "1"
+      },
+      {
+        "marketId": 55433,
+        "odds": 1.19,
+        "sel": "1",
+        "eventId": 4457
+      },
+      {
+        "eventId": 4458,
+        "marketId": 55448,
+        "odds": 2.01,
+        "sel": "1"
+      },
+      {
+        "eventId": 4464,
+        "marketId": 55513,
+        "odds": 2.11,
+        "sel": "1"
+      },
+      {
+        "eventId": 4468,
+        "marketId": 55569,
+        "odds": 2.86,
+        "sel": "1"
+      },
+      {
+        "odds": 1.85,
+        "sel": "1",
+        "eventId": 4474,
+        "marketId": 55649
+      },
+      {
+        "eventId": 4480,
+        "marketId": 55730,
+        "odds": 2.26,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4481,
+        "marketId": 55736,
+        "odds": 2.32
+      },
+      {
+        "sel": "1",
+        "eventId": 4483,
+        "marketId": 55761,
+        "odds": 1.35
+      },
+      {
+        "marketId": 55919,
+        "odds": 1.93,
+        "sel": "1",
+        "eventId": 4496
+      },
+      {
+        "eventId": 4507,
+        "marketId": 56042,
+        "odds": 1.77,
+        "sel": "1"
+      },
+      {
+        "eventId": 4513,
+        "marketId": 56114,
+        "odds": 2.14,
+        "sel": "1"
+      },
+      {
+        "eventId": 4517,
+        "marketId": 56157,
+        "odds": 1.37,
+        "sel": "1"
+      },
+      {
+        "eventId": 4523,
+        "marketId": 56238,
+        "odds": 1.48,
+        "sel": "1"
+      },
+      {
+        "eventId": 4524,
+        "marketId": 56243,
+        "odds": 2.89,
+        "sel": "1"
+      },
+      {
+        "sel": "1",
+        "eventId": 4526,
+        "marketId": 56270,
+        "odds": 1.65
+      },
+      {
+        "sel": "1",
+        "eventId": 4529,
+        "marketId": 56303,
+        "odds": 2.39
+      },
+      {
+        "eventId": 4544,
+        "marketId": 56510,
+        "odds": 1.24,
+        "sel": "1"
+      },
+      {
+        "odds": 1.54,
+        "sel": "1",
+        "eventId": 4550,
+        "marketId": 56591
+      }
+    ]
+  },
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": {},
+    "checks": {
+      "answered (201 or 409/422)": {
+        "name": "answered (201 or 409/422)",
+        "path": "::answered (201 or 409/422)",
+        "id": "e62aba3b55132c598d16c5350c925d74",
+        "passes": 6001,
+        "fails": 0
+      }
+    }
+  },
+  "metrics": {
+    "data_sent": {
+      "count": 1990514,
+      "rate": 66315.76988670415
+    },
+    "http_req_waiting": {
+      "min": 0.32175,
+      "med": 0.7898125,
+      "p(90)": 1.0949999,
+      "p(95)": 1.2248625999999998,
+      "p(99)": 2.079963989999995,
+      "max": 11.286666,
+      "avg": 0.8399351962025292
+    },
+    "http_req_duration": {
+      "avg": 0.8787261167554948,
+      "min": 0.339208,
+      "med": 0.8276045000000001,
+      "p(90)": 1.1567464,
+      "p(95)": 1.29658485,
+      "p(99)": 2.156009989999998,
+      "max": 11.307708
+    },
+    "http_req_duration{expected_response:true}": {
+      "avg": 0.8787374474429437,
+      "min": 0.339208,
+      "med": 0.827625,
+      "p(90)": 1.1567756,
+      "p(95)": 1.2966119,
+      "p(99)": 2.1563816599999983,
+      "max": 11.307708
+    },
+    "http_req_blocked": {
+      "med": 0.0015,
+      "p(90)": 0.004625,
+      "p(95)": 0.005917,
+      "p(99)": 0.03155522999999995,
+      "max": 1.124,
+      "avg": 0.006718148401065806,
+      "min": 0.000541
+    },
+    "iteration_duration": {
+      "min": 0.374167,
+      "med": 0.904458,
+      "p(90)": 1.304375,
+      "p(95)": 1.502958,
+      "p(99)": 2.384208,
+      "max": 11.423583,
+      "avg": 0.9672257260456566
+    },
+    "http_req_connecting": {
+      "max": 1.081542,
+      "avg": 0.004213094270486343,
+      "min": 0,
+      "med": 0,
+      "p(90)": 0,
+      "p(95)": 0,
+      "p(99)": 0
+    },
+    "http_req_failed": {
+      "passes": 1,
+      "fails": 6003,
+      "thresholds": {
+        "rate<0.01": false
+      },
+      "value": 0.00016655562958027982
+    },
+    "http_req_tls_handshaking": {
+      "p(99)": 0,
+      "max": 0,
+      "avg": 0,
+      "min": 0,
+      "med": 0,
+      "p(90)": 0,
+      "p(95)": 0
+    },
+    "data_received": {
+      "count": 3729337,
+      "rate": 124246.22701572136
+    },
+    "vus": {
+      "value": 0,
+      "min": 0,
+      "max": 2
+    },
+    "checks": {
+      "fails": 0,
+      "passes": 6001,
+      "value": 1
+    },
+    "iterations": {
+      "count": 6001,
+      "rate": 199.92872950911755
+    },
+    "http_req_sending": {
+      "min": 0.002542,
+      "med": 0.011333,
+      "p(90)": 0.024820700000000008,
+      "p(95)": 0.03116069999999999,
+      "p(99)": 0.04682675999999999,
+      "max": 0.269417,
+      "avg": 0.014110496002664877
+    },
+    "http_reqs": {
+      "rate": 200.028677215921,
+      "count": 6004
+    },
+    "bets_rejected": {
+      "count": 1,
+      "rate": 0.03331590226780829
+    },
+    "vus_max": {
+      "value": 50,
+      "min": 50,
+      "max": 50
+    },
+    "http_req_receiving": {
+      "avg": 0.024680424550299868,
+      "min": 0.00775,
+      "med": 0.018292,
+      "p(90)": 0.04755810000000001,
+      "p(95)": 0.06089194999999995,
+      "p(99)": 0.08802699999999997,
+      "max": 0.540459
+    },
+    "bets_accepted": {
+      "count": 6000,
+      "rate": 199.89541360684976
+    }
+  }
+}

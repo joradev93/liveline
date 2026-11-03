@@ -162,3 +162,41 @@ Format: what — why — alternatives considered.
 - **What:** `export * from './domain'` instead of `'./domain.js'`.
 - **Why:** Turbopack (Next 16 default) does not map `.js` to `.ts` inside a transpiled workspace
   package. All consumers use bundler resolution (tsx, tsup, vitest, Next), so this is safe.
+
+## D23. The feed bus client lives in feed-sim (`@liveline/feed-sim/client`)
+
+- **Why:** gateway and bet-api both consume the bus. The owner of the bus ships its client. A subpath
+  export keeps `ws` (server-only) out of the consumers' bundles.
+
+## D24. Bet validation rules
+
+- **What:** `validateBet` (pure) checks, in order: same-event legs in a multiple → market exists and
+  belongs to the event → event/market not settled → not suspended → selection exists → price policy.
+  `higher` is checked **per leg**: a multiple is refused if any leg got shorter, even if the combined
+  price went up.
+- **Why:** per-leg is what users expect ("I accept better prices") and what most operators do.
+  Legs are always placed at the **current** price (with its market version), never the requested one.
+- **Alternatives:** compare only combined odds for multiples (a user could get a shorter leg hidden by
+  a longer one).
+
+## D25. Idempotency
+
+- **What:** `Idempotency-Key` is required, scoped per user. The request hash is SHA-256 of the
+  zod-parsed body (fixed key order). Same key + same body → stored response is replayed with
+  `Idempotent-Replayed: true`. Same key + other body → 422. Business outcomes (201, 409, 422) are
+  stored; 400 (invalid input) and 503 (feed not ready) are not, because they do not depend on state.
+- **Why:** the client retries network failures with the same key (`placeBet` in the web app), so a lost
+  response never leads to a second bet.
+- **Concurrency:** lookup, validation, debit, insert and the idempotency record run synchronously in one
+  SQLite transaction. Node runs one handler body at a time, so two requests with the same key cannot
+  interleave. Test: 20 parallel requests with one key → exactly 1 bet, 1 debit.
+
+## D26. Demo identity = `X-User-Id` header
+
+- **What:** a random id per browser (localStorage), each with a mock balance of €1000 (`POST /me/reset`).
+- **Why:** no accounts in scope. Real auth would replace the header with a verified session.
+
+## D27. Betslip legs keep their prices live through `event:{id}` subscriptions
+
+- **Why:** a leg stays on the slip when the user switches sport. The slip subscribes to the event topics
+  of its legs (ref-counted, shared with the event panel), so prices and suspensions stay current.
