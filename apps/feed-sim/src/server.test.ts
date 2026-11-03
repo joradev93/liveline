@@ -59,4 +59,36 @@ describe('FeedServer', () => {
     expect(await res.json()).toEqual({ rate: 750 });
     expect(server.tickRate).toBe(750);
   });
+
+  it('protects the rate and the bus with tokens when configured', async () => {
+    server = new FeedServer(new FeedSimulator({ seed: 1, eventCount: 5 }, Date.now()), {
+      port: 0,
+      rate: 100,
+      controlToken: 'ctl-secret',
+      busToken: 'bus-secret',
+    });
+    await server.start();
+    const base = `127.0.0.1:${server.port}`;
+    const post = (auth?: string) =>
+      fetch(`http://${base}/rate`, {
+        method: 'POST',
+        headers: auth ? { authorization: auth } : {},
+        body: JSON.stringify({ rate: 300 }),
+      });
+    expect((await post()).status).toBe(401);
+    expect((await post('Bearer wrong')).status).toBe(401);
+    expect((await post('Bearer ctl-secret')).status).toBe(200);
+
+    const opens = (url: string) =>
+      new Promise<boolean>((resolve) => {
+        const ws = new WebSocket(url);
+        ws.onopen = () => {
+          ws.close();
+          resolve(true);
+        };
+        ws.onerror = () => resolve(false);
+      });
+    expect(await opens(`ws://${base}/feed`)).toBe(false);
+    expect(await opens(`ws://${base}/feed?token=bus-secret`)).toBe(true);
+  });
 });

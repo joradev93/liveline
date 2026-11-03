@@ -30,8 +30,10 @@ export async function POST(req: Request) {
     );
   }
   try {
+    const token = process.env.FEED_CONTROL_TOKEN;
     const res = await fetch(`${FEED_HTTP_URL}/rate`, {
       method: 'POST',
+      headers: token ? { authorization: `Bearer ${token}` } : {},
       body: JSON.stringify({ rate }),
       signal: AbortSignal.timeout(1_000),
     });

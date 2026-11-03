@@ -6,10 +6,14 @@
   "scripts": {
     "e2e": "playwright test",
     "measure:bundle": "node measure-bundle.mjs",
-    "lhci": "lhci autorun --config=lighthouserc.json"
+    "lhci": "lhci autorun --config=lighthouserc.json",
+    "demo:record": "node record-demo.mjs",
+    "demo:gif": "node make-gif.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
-    "@lhci/cli": "0.16.0"
+    "@lhci/cli": "0.16.0",
+    "gifenc": "1.0.3",
+    "jpeg-js": "0.4.4"
   }
 }

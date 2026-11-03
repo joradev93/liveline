@@ -3,7 +3,7 @@ import { defaultConfig, startGateway } from './gateway.js';
 const config = defaultConfig();
 const gateway = await startGateway(config);
 console.log(
-  `[gateway] ws://localhost:${gateway.server.port}/ws  feed=${config.feedUrl} flush=${config.flushMs}ms compression=${config.compression}`,
+  `[gateway] ws://localhost:${gateway.server.port}/ws  feed=${config.feedUrl.replace(/\?.*$/, '')} flush=${config.flushMs}ms compression=${config.compression}`,
 );
 
 let last = { deltas: 0, bytes: 0 };

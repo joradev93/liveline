@@ -40,15 +40,21 @@ export class FeedClient {
     const ws = new WebSocket(this.url);
     this.ws = ws;
     this.seq = -1;
-    ws.onmessage = (ev) => this.onMessage(JSON.parse(String(ev.data)) as FeedMessage);
-    ws.onclose = () => {
+    let retried = false;
+    // Node's built-in WebSocket fires only `error` (no `close`) when the handshake fails, and
+    // calling close() then re-enters onerror. So reconnect from whichever event comes first.
+    const retry = () => {
+      if (retried) return;
+      retried = true;
       this.handlers.onStatus?.(false);
       if (this.stopped) return;
       this.counters.reconnects++;
       setTimeout(() => this.connect(), this.retryMs);
       this.retryMs = Math.min(this.retryMs * 2, 5_000);
     };
-    ws.onerror = () => ws.close();
+    ws.onmessage = (ev) => this.onMessage(JSON.parse(String(ev.data)) as FeedMessage);
+    ws.onclose = retry;
+    ws.onerror = retry;
   }
 
   private onMessage(msg: FeedMessage): void {

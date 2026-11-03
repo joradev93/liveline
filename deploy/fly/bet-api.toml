@@ -1,0 +1,43 @@
+# Fly.io: bet API (Fastify + SQLite on a volume). Deploy from the repo root:
+#   fly launch --no-deploy --copy-config -c deploy/fly/bet-api.toml
+#   fly volumes create bets -a liveline-bet-api --region ams --size 1
+#   fly secrets set -a liveline-bet-api FEED_URL="ws://liveline-feed.internal:8080/feed?token=<FEED_BUS_TOKEN>"
+#   fly deploy -c deploy/fly/bet-api.toml
+app = "liveline-bet-api"
+primary_region = "ams"
+
+[build]
+  dockerfile = "../../Dockerfile"
+  [build.args]
+    APP = "bet-api"
+    # Fly volumes are root-owned.
+    RUN_AS = "root"
+
+[env]
+  BET_PORT = "8080"
+  BET_DB = "/data/bets.db"
+  # Replace with the real Vercel URL (comma-separated list allowed).
+  WEB_ORIGIN = "https://liveline.vercel.app"
+
+[mounts]
+  source = "bets"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "15s"
+    method = "GET"
+    path = "/health"
+    timeout = "2s"
+
+# SQLite = one writer: keep exactly one machine.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

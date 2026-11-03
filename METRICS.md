@@ -179,16 +179,17 @@ node e2e/measure-runtime.mjs --rate 2000 --cpu 4
 
 ## Fixes made because of measurements
 
-| found by                             | problem                                                                          | fix                                                                     | result                            |
-| ------------------------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------- |
-| randomized replica test (Day 2)      | a client skipped under backpressure stays stale on a quiet topic                 | catch-up snapshot when it drains                                        | test passes; D12                  |
-| slow-client run (Day 3)              | backpressure never triggered with 15 s / 40 s pauses                             | none needed: macOS kernel buffers hold 8 MB first; test with 90 s pause | 708 skipped, 6 resyncs            |
-| reasoning + render counter (Day 4/6) | market group re-rendered on every price tick                                     | `useMarketShape` (stable object)                                        | only the changed cell renders     |
-| Lighthouse                           | LIVE badge contrast 3.33:1, SUSP badge 3.13:1                                    | darker backgrounds                                                      | accessibility 95 → 100            |
-| Lighthouse                           | `/favicon.ico` 404 in console                                                    | `app/icon.svg`                                                          | best practices 96 → 100           |
-| Lighthouse                           | render-blocking CSS (est. 150 ms on mobile)                                      | `experimental.inlineCss`                                                | no CSS request                    |
-| Lighthouse                           | desktop LCP element = side-panel hint text, painted late (615 ms in 2 of 3 runs) | server-rendered lead text in the main column                            | desktop LCP 209 ms in 3 of 3 runs |
-| bundle measurement                   | try: lazy-load betslip, metrics and event panel                                  | measured: −2.5 KB initial, +3.9 KB total                                | **reverted** (D28)                |
+| found by                        | problem                                                                          | fix                                                                     | result                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| randomized replica test (Day 2) | a client skipped under backpressure stays stale on a quiet topic                 | catch-up snapshot when it drains                                        | test passes; D12                                                            |
+| slow-client run (Day 3)         | backpressure never triggered with 15 s / 40 s pauses                             | none needed: macOS kernel buffers hold 8 MB first; test with 90 s pause | 708 skipped, 6 resyncs                                                      |
+| code review (Day 4)             | market group re-rendered on every price tick                                     | `useMarketShape` (stable object)                                        | verified with the render counter: 2–18 odds cells rendered/s at 26–80 ops/s |
+| Lighthouse                      | LIVE badge contrast 3.33:1, SUSP badge 3.13:1                                    | darker backgrounds                                                      | accessibility 95 → 100                                                      |
+| Lighthouse                      | `/favicon.ico` 404 in console                                                    | `app/icon.svg`                                                          | best practices 96 → 100                                                     |
+| Lighthouse                      | render-blocking CSS (est. 150 ms on mobile)                                      | `experimental.inlineCss`                                                | no CSS request                                                              |
+| Lighthouse                      | desktop LCP element = side-panel hint text, painted late (615 ms in 2 of 3 runs) | server-rendered lead text in the main column                            | desktop LCP 209 ms in 3 of 3 runs                                           |
+| bundle measurement              | try: lazy-load betslip, metrics and event panel                                  | measured: −2.5 KB initial, +3.9 KB total                                | **reverted** (D28)                                                          |
+| `pnpm start` (Day 7)            | gateway crashed (stack overflow) when it started before feed-sim                 | reconnect from `error` or `close`, once per socket                      | all services start in any order; test added                                 |
 
 ## Bet API: POST /bets (k6, Docker)
 
@@ -216,5 +217,8 @@ Rejections are real state changes during the run (market suspended / event close
 pnpm build && pnpm e2e     # Playwright, system Chrome
 ```
 
-7 tests pass (8.1 s): server-rendered rows in HTML, live odds updates, event panel, sport switch,
-single bet, multiple bet, toggle selection.
+8 tests pass (13.1 s): server-rendered rows in HTML, live odds updates, event panel, sport switch,
+single bet, multiple bet, toggle selection, balance loads after the bet service was unreachable.
+One earlier run had 1 failure: the stack had just started and bet-api was not up yet when the page
+loaded, so the balance stayed empty. Fixed in the app (balance request retries with backoff) and
+covered by the last test.

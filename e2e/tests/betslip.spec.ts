@@ -54,3 +54,12 @@ test('clicking a selected price removes it from the slip', async ({ page }) => {
   await selected.click();
   await expect(page.locator('.leg')).toHaveCount(0);
 });
+
+test('loads the balance once the bet service becomes reachable', async ({ page }) => {
+  let failures = 0;
+  await page.route('**/me', (route) => (failures++ < 2 ? route.abort() : route.continue()));
+  await page.goto('/?sport=1');
+  await expect(page.locator('.balance')).toContainText('—');
+  await expect(page.locator('.balance')).toContainText('€', { timeout: 10_000 });
+  expect(failures).toBeGreaterThanOrEqual(3);
+});

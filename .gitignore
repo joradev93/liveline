@@ -16,3 +16,4 @@ load/results/*.log
 next-env.d.ts
 data/
 e2e/.lighthouseci/
+e2e/results/demo/

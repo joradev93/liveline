@@ -32,7 +32,7 @@ const app = await buildApp({
 });
 await app.listen({ port: config.port, host: config.host });
 console.log(
-  `[bet-api] http://localhost:${config.port}  feed=${config.feedUrl} db=${config.dbFile}`,
+  `[bet-api] http://localhost:${config.port}  feed=${config.feedUrl.replace(/\?.*$/, '')} db=${config.dbFile}`,
 );
 
 const shutdown = async () => {

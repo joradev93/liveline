@@ -5,12 +5,14 @@ import { FeedSimulator } from './simulator.js';
 const env = (name: string, fallback: string): string => process.env[name] ?? fallback;
 
 const config = {
-  port: Number(env('FEED_PORT', '7001')),
+  port: Number(process.env.FEED_PORT ?? process.env.PORT ?? 7001),
   seed: Number(env('FEED_SEED', '42')),
   events: Number(env('FEED_EVENTS', '1500')),
   rate: Number(env('FEED_RATE', '200')),
   /** summary | ticks | quiet */
   log: env('FEED_LOG', 'summary'),
+  controlToken: process.env.FEED_CONTROL_TOKEN,
+  busToken: process.env.FEED_BUS_TOKEN,
 };
 
 const sim = new FeedSimulator({ seed: config.seed, eventCount: config.events }, Date.now());
@@ -19,6 +21,8 @@ let samples: FeedChange[] = [];
 const server = new FeedServer(sim, {
   port: config.port,
   rate: config.rate,
+  controlToken: config.controlToken,
+  busToken: config.busToken,
   onBatch: (changes) => {
     if (config.log === 'ticks') for (const c of changes) console.log(formatChange(c));
     else if (samples.length < 3) samples.push(...changes.slice(0, 3 - samples.length));

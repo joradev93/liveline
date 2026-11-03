@@ -7,13 +7,14 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "e2e": "pnpm --filter @liveline/e2e e2e"
+    "e2e": "pnpm --filter @liveline/e2e e2e",
+    "start": "turbo run start"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

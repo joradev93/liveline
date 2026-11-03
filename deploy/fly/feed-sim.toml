@@ -1,0 +1,37 @@
+# Fly.io: synthetic feed. Deploy from the repo root:
+#   fly launch --no-deploy --copy-config -c deploy/fly/feed-sim.toml
+#   fly secrets set -a liveline-feed FEED_CONTROL_TOKEN=... FEED_BUS_TOKEN=...
+#   fly deploy -c deploy/fly/feed-sim.toml
+app = "liveline-feed"
+primary_region = "ams"
+
+[build]
+  dockerfile = "../../Dockerfile"
+  [build.args]
+    APP = "feed-sim"
+
+[env]
+  FEED_PORT = "8080"
+  FEED_EVENTS = "1500"
+  FEED_RATE = "200"
+  FEED_LOG = "quiet"
+
+# Public only so the web app (on Vercel) can call POST /rate for the load slider.
+# Both the rate endpoint and the feed bus require tokens (secrets above).
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "5s"
+    interval = "15s"
+    method = "GET"
+    path = "/health"
+    timeout = "2s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

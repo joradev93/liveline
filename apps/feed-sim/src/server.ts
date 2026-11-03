@@ -17,6 +17,10 @@ export interface FeedServerOptions {
   /** How often the lifecycle (start, goals, settle) runs. */
   lifecycleIntervalMs?: number;
   onBatch?: (changes: FeedChange[]) => void;
+  /** If set, `POST /rate` needs `Authorization: Bearer <token>` (public deployments). */
+  controlToken?: string;
+  /** If set, feed bus consumers must connect with `?token=<token>`. */
+  busToken?: string;
 }
 
 /** Internal consumers must keep up; one that falls this far behind is dropped and must reconnect. */
@@ -47,7 +51,13 @@ export class FeedServer {
   ) {
     this.rate = clampRate(opts.rate);
     this.http = createServer((req, res) => this.handleHttp(req, res));
-    this.wss = new WebSocketServer({ server: this.http, path: '/feed' });
+    this.wss = new WebSocketServer({
+      server: this.http,
+      path: '/feed',
+      verifyClient: ({ req }: { req: IncomingMessage }) =>
+        !opts.busToken ||
+        new URL(req.url ?? '/', 'http://x').searchParams.get('token') === opts.busToken,
+    });
     this.wss.on('connection', (ws) => this.onConsumer(ws));
   }
 
@@ -153,6 +163,12 @@ export class FeedServer {
       });
     }
     if (req.method === 'POST' && url === '/rate') {
+      if (
+        this.opts.controlToken &&
+        req.headers.authorization !== `Bearer ${this.opts.controlToken}`
+      ) {
+        return send(401, { error: 'unauthorized' });
+      }
       let body = '';
       req.on('data', (chunk: Buffer) => {
         body += chunk.toString();

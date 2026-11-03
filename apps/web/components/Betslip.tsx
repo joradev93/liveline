@@ -42,8 +42,21 @@ export function Betslip() {
   const [notice, setNotice] = useState<Notice | null>(null);
   const [receipts, setReceipts] = useState<Bet[]>([]);
 
+  // Retry with backoff: the bet service may start after the page was loaded.
   useEffect(() => {
-    void fetchBalance().then(setBalance);
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const load = (retryMs: number) =>
+      void fetchBalance().then((cents) => {
+        if (cancelled) return;
+        if (cents !== null) setBalance(cents);
+        else timer = setTimeout(() => load(Math.min(retryMs * 2, 15_000)), retryMs);
+      });
+    load(1_000);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   // Keep prices of betslip legs live even when their sport is not on screen.
@@ -154,7 +167,7 @@ export function Betslip() {
           <button
             type="button"
             className="link"
-            onClick={() => void resetBalance().then(setBalance)}
+            onClick={() => void resetBalance().then((cents) => cents !== null && setBalance(cents))}
           >
             reset
           </button>

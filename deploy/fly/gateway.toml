@@ -1,0 +1,44 @@
+# Fly.io: WebSocket gateway (uWebSockets.js). Deploy from the repo root:
+#   fly launch --no-deploy --copy-config -c deploy/fly/gateway.toml
+#   fly secrets set -a liveline-gateway FEED_URL="ws://liveline-feed.internal:8080/feed?token=<FEED_BUS_TOKEN>"
+#   fly deploy -c deploy/fly/gateway.toml
+app = "liveline-gateway"
+primary_region = "ams"
+
+[build]
+  dockerfile = "../../Dockerfile"
+  [build.args]
+    APP = "gateway"
+
+[env]
+  GW_PORT = "8080"
+  GW_FLUSH_MS = "100"
+  # permessage-deflate is off in all measured runs (METRICS.md). Enabling it saves bandwidth on
+  # real networks but costs gateway CPU: measure before turning it on.
+  GW_COMPRESSION = "0"
+  GW_LOG = "quiet"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  # One WebSocket = one connection. Measured locally: 15 000 clients within the p99 target
+  # on one M5 Pro core; a shared-cpu VM is much smaller, so start low and load-test there.
+  [http_service.concurrency]
+    type = "connections"
+    soft_limit = 4000
+    hard_limit = 8000
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "15s"
+    method = "GET"
+    path = "/health"
+    timeout = "2s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

@@ -230,3 +230,35 @@ Format: what — why — alternatives considered.
 - **What:** `POST /api/load` → feed-sim `POST /rate`. `LOAD_CONTROL=off` disables it.
 - **Why:** feed-sim stays private (no CORS, no public port). The slider is shared by all viewers,
   which the UI says.
+
+## D32. Feed bus client: reconnect from `error` or `close`, once per socket
+
+- **What:** `FeedClient` schedules a reconnect from whichever of `error` / `close` fires first.
+- **Why:** Node 22's built-in WebSocket fires only `error` when the handshake fails (no `close`, the
+  state stays CONNECTING), and calling `close()` from `onerror` re-entered `onerror` until the stack
+  overflowed. Found when `pnpm start` started the gateway before feed-sim. Test:
+  `apps/feed-sim/src/client.test.ts`.
+
+## D33. Docker image: tsup bundle + external dependencies only (`scripts/pack-app.mjs`)
+
+- **What:** the image copies `dist/` and installs only the app's non-workspace dependencies
+  (`npm install --omit=dev`, exact versions from the app's package.json).
+- **Why:** `pnpm deploy` in pnpm 10 needs `inject-workspace-packages=true`, which would make every
+  change in `packages/protocol` need a reinstall during development. The bundle already contains the
+  workspace code.
+- **Tested:** the packing step and the packed apps (start, connect with a bus token). The Docker build
+  itself was not run (no base image pulled).
+
+## D34. Optional tokens for feed-sim in public deployments
+
+- **What:** `FEED_CONTROL_TOKEN` (Bearer for `POST /rate`) and `FEED_BUS_TOKEN` (`?token=` for the
+  feed bus). Off when unset. Tokens are removed from log lines.
+- **Why:** on Vercel the load slider's route handler must reach feed-sim over the internet.
+
+## D35. Demo GIF without ffmpeg
+
+- **What:** `e2e/record-demo.mjs` records frames with Chrome's screencast (CDP);
+  `e2e/make-gif.mjs` builds the GIF in JS (jpeg-js + gifenc) with frame differencing (unchanged pixels
+  are transparent): 4.1 MB for 24 s at 960×600, 8 fps.
+- **Why:** Playwright video needs its own ffmpeg download outside the project, and the system ffmpeg
+  on this machine is broken (missing `libx265`). See BLOCKERS.md B3.
