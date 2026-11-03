@@ -55,6 +55,19 @@ importers:
         specifier: 8.18.2
         version: 8.18.2
 
+  apps/gateway:
+    dependencies:
+      '@liveline/protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
+      uWebSockets.js:
+        specifier: github:uNetworking/uWebSockets.js#v20.71.0
+        version: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/9ec36de7709996c58dce03d63796216c90a17136
+    devDependencies:
+      '@liveline/feed-sim':
+        specifier: workspace:*
+        version: link:../feed-sim
+
   packages/protocol:
     dependencies:
       zod:
@@ -1215,6 +1228,10 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/9ec36de7709996c58dce03d63796216c90a17136:
+    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/9ec36de7709996c58dce03d63796216c90a17136}
+    version: 20.71.0
+
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
@@ -2337,6 +2354,8 @@ snapshots:
       - supports-color
 
   typescript@5.9.3: {}
+
+  uWebSockets.js@https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/9ec36de7709996c58dce03d63796216c90a17136: {}
 
   ufo@1.6.4: {}
 

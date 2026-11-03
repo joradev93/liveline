@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsup src/index.ts --format esm --target node22 --clean",
+    "build": "tsup",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
     "lint": "eslint src"

@@ -1,0 +1,22 @@
+{
+  "name": "@liveline/gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint src",
+    "ws-client": "tsx scripts/ws-client.ts"
+  },
+  "dependencies": {
+    "@liveline/protocol": "workspace:*",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.71.0"
+  },
+  "devDependencies": {
+    "@liveline/feed-sim": "workspace:*"
+  }
+}

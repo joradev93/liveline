@@ -51,3 +51,56 @@ Format: what — why — alternatives considered.
 
 - **What:** `stakeCents`, `potentialReturnCents`, `balanceCents`; odds compared with `Math.round(o*100)`.
 - **Why:** no float rounding bugs in balance or odds comparison.
+
+## D8. Coalescing per topic, not per client
+
+- **What:** the gateway keeps one pending map per topic (latest value per market / event). Every flush
+  (100 ms) each changed topic becomes one delta, serialized once and sent as the same bytes to all
+  subscribers. Per client the gateway only keeps a version cursor per topic.
+- **Why:** all subscribers of a topic need exactly the same data, so a per-client buffer would repeat
+  the same merge and `JSON.stringify` N times. Per-topic coalescing gives the same result as a
+  per-client "latest value per market" buffer at a fraction of the CPU. Measured flush time is in
+  METRICS.md.
+- **Alternatives:** per-client buffers (spec wording; O(clients × changes) work per flush);
+  uWS built-in `publish()` (fast C++ fan-out, but no per-client backpressure decision and no
+  per-client version cursor).
+
+## D9. One gateway-wide version counter
+
+- **What:** topic versions come from a single counter that increases on every recorded op.
+- **Why:** versions stay monotonic per topic even when a topic is dropped (last unsubscribe) and created
+  again later. Version numbers can jump; clients only compare `from` with their own version.
+
+## D10. Gap rule: `from > clientVersion`, not `from !== clientVersion`
+
+- **What:** a client resyncs only when `delta.from > clientVersion`; it ignores deltas with
+  `v <= clientVersion`.
+- **Why:** ops carry absolute values (latest price, latest status), so a delta from `f` to `v` can be
+  applied to any state between `f` and `v`. This lets a client that got a snapshot in the middle of a
+  flush window apply the next delta without a useless resync. It also allows caching one snapshot per
+  topic per flush window (D11).
+
+## D11. Snapshot cache per topic per flush window
+
+- **What:** the serialized snapshot of a topic is cached until the next flush.
+- **Why:** when many clients subscribe at once (page loads, load tests, reconnect storms) the gateway
+  serializes a sport snapshot (~200 KB) once per 100 ms instead of once per client. Correct because of
+  D10: a cached snapshot at version c satisfies `flushedV <= c`.
+
+## D12. Backpressure: skip deltas, client resyncs; plus server catch-up for quiet topics
+
+- **What:** if a socket has more than `GW_HIGH_WATER` (512 KB) buffered, the flush skips it. The next
+  delta it gets has a gap and the client resubscribes (spec flow). If no newer delta arrives on that
+  topic (a quiet event topic), the gateway pushes a fresh snapshot once the socket has drained.
+- **Why:** without the catch-up a skipped client could show a stale price for as long as the topic
+  stays quiet. A unit test reproduced exactly this before the fix.
+- **Hard limit:** uWS `maxBackpressure` (8 MB) closes sockets that never drain.
+
+## D13. Load uWebSockets.js through createRequire
+
+- See BLOCKERS.md B1. The ESM wrapper of v20.71.0 is broken.
+
+## D14. Apps are bundled with tsup, workspace packages included
+
+- **What:** `noExternal: [/^@liveline\//, 'zod']`. Native modules (uWS, better-sqlite3) stay external.
+- **Why:** workspace packages export TypeScript source; the production bundle must not import `.ts`.
