@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+*.db
+*.db-*
+.env
+.env.local
+.lighthouseci/
+playwright-report/
+test-results/
+load/results/*.json
+.DS_Store
+next-env.d.ts
