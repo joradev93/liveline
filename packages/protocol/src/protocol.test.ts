@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { combineOdds, oddsToInt, roundOdds } from './odds.js';
+import { combineOdds, oddsToInt, roundOdds } from './odds';
 import {
   clientMessageSchema,
   deltaOpSchema,
   placeBetRequestSchema,
   serverMessageSchema,
-} from './schemas.js';
-import { parseTopic } from './topics.js';
-import { hasVersionGap, isStaleDelta } from './ws.js';
+} from './schemas';
+import { parseTopic } from './topics';
+import { hasVersionGap, isStaleDelta } from './ws';
 
 describe('topics', () => {
   it('parses sport and event topics', () => {

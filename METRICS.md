@@ -106,3 +106,24 @@ node load/slow-client.mjs --pause 90 --after 5
 
 With pauses of 15 s and 40 s nothing was skipped: macOS lets the kernel hold up to 8 MB per
 connection (`net.inet.tcp.autosndbufmax` + `autorcvbufmax` = 4 MB each) before uWS starts buffering.
+
+## Web: initial JavaScript (Day 4 baseline)
+
+Production build (`next build`, Turbopack), served by `next start` (gzip). Measured in Chrome via
+Resource Timing `encodedBodySize` (bytes on the wire).
+
+```bash
+pnpm --filter @liveline/web build && pnpm --filter @liveline/web start
+node e2e/measure-bundle.mjs
+```
+
+| what                                                          | compressed (gzip)        | uncompressed |
+| ------------------------------------------------------------- | ------------------------ | ------------ |
+| initial JS, main thread (7 files)                             | **150.4 KB**             | 502.6 KB     |
+| — of which Next.js runtime + React DOM + Turbopack runtime    | 128.6 KB                 |              |
+| — of which app code (store, rows, panel)                      | 7.8 KB                   |              |
+| — of which Board + @tanstack/react-virtual                    | 14.0 KB                  |              |
+| feed worker                                                   | 0.9 KB (bootstrap chunk) |              |
+| HTML document (server-rendered first rows + snapshot payload) | 28.1 KB                  | 280.7 KB     |
+
+**Target < 120 KB: missed.** The framework baseline alone is 128.6 KB gzip, above the target.

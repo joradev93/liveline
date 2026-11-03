@@ -120,3 +120,45 @@ Format: what — why — alternatives considered.
 - **What:** delta `ts` = feed time of the oldest change coalesced into it.
 - **Why:** it is the honest worst case for every change in the delta (includes the coalescing wait).
   Using the newest change would report ~50 ms less on average and hide the cost of coalescing.
+
+## D17. One client store per request, passed by React context
+
+- **What:** `Providers` creates the `LiveStore` in `useState`. The server snapshot is loaded into it
+  during render (`loadSnapshot(..., { silent: true })`), so SSR and hydration render the same rows.
+- **Why:** a module-level store would be shared between requests on the server.
+- **Alternatives:** zustand/redux (more bundle, same idea); passing rows as props (no live updates
+  without a second copy of the data).
+
+## D18. Selectors per odds cell, plus a "market shape" selector
+
+- **What:** `usePrice(marketId, k)` returns a number; `useMarketShape` returns an object that only
+  changes when the market's selections change (never on a price tick).
+- **Why:** a price tick re-renders exactly one `OddsButton`. The row and the market group do not
+  re-render (they read only stable data).
+
+## D19. Odds flash = swapping CSS classes on the DOM node
+
+- **What:** in a layout effect, `OddsButton` swaps `flash-up-a` / `flash-up-b` (identical keyframes).
+- **Why:** no React state, no extra render. Swapping between two animation names restarts the
+  animation without the usual `void el.offsetWidth` trick, which forces a synchronous layout per cell.
+
+## D20. Worker posts batches at most every 16 ms
+
+- **What:** the worker parses JSON, checks versions (`TopicSync`) and posts applied items in one
+  `postMessage` per ~16 ms; the store notifies each changed key once per batch.
+- **Why:** the main thread gets at most ~60 small messages per second, independent of the number of
+  topics, and React renders once per batch.
+- **Alternatives:** transferable typed arrays (cheaper structured clone; worth it only for much
+  bigger batches — see MORNING.md next steps).
+
+## D21. Window virtualizer with `initialRect`
+
+- **What:** `useWindowVirtualizer` with `initialRect: 1280×1000`.
+- **Why:** the server has no viewport. With a fixed guess, the server renders the first rows (good
+  LCP) and the first client render produces the same rows, so hydration matches.
+
+## D22. Extensionless relative imports in `@liveline/protocol`
+
+- **What:** `export * from './domain'` instead of `'./domain.js'`.
+- **Why:** Turbopack (Next 16 default) does not map `.js` to `.ts` inside a transpiled workspace
+  package. All consumers use bundler resolution (tsx, tsup, vitest, Next), so this is safe.

@@ -6,8 +6,8 @@
  * messages, bet requests) and in tests.
  */
 import { z } from 'zod';
-import { MAX_LEGS, MAX_STAKE_CENTS } from './bets.js';
-import { MAX_ODDS, MIN_ODDS } from './odds.js';
+import { MAX_LEGS, MAX_STAKE_CENTS } from './bets';
+import { MAX_ODDS, MIN_ODDS } from './odds';
 
 export const MAX_TOPICS_PER_MESSAGE = 50;
 

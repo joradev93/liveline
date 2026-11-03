@@ -1,0 +1,548 @@
+:root {
+  --bg: #0b0f14;
+  --surface: #11171f;
+  --surface-2: #161e28;
+  --surface-3: #1d2733;
+  --border: #212b37;
+  --text: #e6edf3;
+  --muted: #8593a3;
+  --brand: #f5b301;
+  --up: #2fd47a;
+  --down: #ff5c5c;
+  --live: #ff4757;
+  --focus: #6aa8ff;
+  --radius: 8px;
+  --header-h: 56px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    14px/1.4 system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Header */
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--header-h);
+  padding: 0 20px;
+  background: rgba(11, 15, 20, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  font-size: 16px;
+}
+
+.brand-mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--brand), #ff7a00);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.tab {
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.tab[aria-current='page'] {
+  color: #111;
+  background: var(--brand);
+  font-weight: 600;
+}
+
+.conn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.conn[data-state='live'] .conn-dot {
+  background: var(--up);
+  box-shadow: 0 0 0 3px rgba(47, 212, 122, 0.18);
+}
+
+.conn[data-state='offline'] .conn-dot {
+  background: var(--down);
+}
+
+/* Layout */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 20px 80px;
+}
+
+.board-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 4px 0 12px;
+}
+
+.board-head h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.side {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - var(--header-h) - 32px);
+  overflow: auto;
+}
+
+.empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Virtualized list */
+
+.list {
+  position: relative;
+}
+
+.list-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-bottom: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 70px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  contain: layout style;
+}
+
+.row[data-status='settled'] {
+  opacity: 0.5;
+}
+
+.row-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge-live {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #fff;
+  background: var(--live);
+}
+
+.row[data-status='suspended'] .badge-live {
+  background: var(--muted);
+}
+
+.score {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.starts {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.row-teams {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.row-teams:hover .team {
+  color: var(--brand);
+}
+
+.team {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.league {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.row-markets {
+  display: grid;
+  grid-template-columns: 186px 124px 124px;
+  gap: 10px;
+}
+
+.market {
+  display: flex;
+  gap: 4px;
+}
+
+.cell {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cell-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Odds button */
+
+.odds {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 56px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 120ms;
+}
+
+.odds:hover:not(:disabled) {
+  background: var(--surface-3);
+}
+
+.odds:disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+}
+
+.odds[data-selected] {
+  background: var(--brand);
+  color: #111;
+}
+
+.odds-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.odds[data-selected] .odds-label {
+  color: #111;
+}
+
+.lock {
+  opacity: 0.7;
+}
+
+/* Odds flash: classes are swapped on the DOM node (see OddsButton). a/b are identical so that
+   switching between them restarts the animation without a forced reflow. */
+.flash-up-a {
+  animation: flash-up-a 900ms ease-out;
+}
+.flash-up-b {
+  animation: flash-up-b 900ms ease-out;
+}
+.flash-down-a {
+  animation: flash-down-a 900ms ease-out;
+}
+.flash-down-b {
+  animation: flash-down-b 900ms ease-out;
+}
+
+@keyframes flash-up-a {
+  0% {
+    border-color: var(--up);
+    color: var(--up);
+  }
+}
+@keyframes flash-up-b {
+  0% {
+    border-color: var(--up);
+    color: var(--up);
+  }
+}
+@keyframes flash-down-a {
+  0% {
+    border-color: var(--down);
+    color: var(--down);
+  }
+}
+@keyframes flash-down-b {
+  0% {
+    border-color: var(--down);
+    color: var(--down);
+  }
+}
+
+.odds[data-selected].flash-up-a,
+.odds[data-selected].flash-up-b,
+.odds[data-selected].flash-down-a,
+.odds[data-selected].flash-down-b {
+  color: #111;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-up-a,
+  .flash-up-b,
+  .flash-down-a,
+  .flash-down-b {
+    animation-duration: 1ms;
+  }
+}
+
+/* Event panel */
+
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(520px, 100%);
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.panel-title {
+  margin: 4px 0 6px;
+  font-size: 18px;
+}
+
+.panel-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-body {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 20px 40px;
+}
+
+.market-block h3 {
+  margin: 14px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.market-grid[data-count='3'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Cards in the side column */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 12px 14px;
+}
+
+/* Small screens */
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .side {
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .top {
+    gap: 12px;
+    padding: 0 12px;
+  }
+  .brand {
+    font-size: 0;
+    gap: 0;
+  }
+  .conn {
+    font-size: 0;
+  }
+  .layout {
+    padding: 12px 12px 96px;
+  }
+  .row {
+    grid-template-columns: 60px minmax(0, 1fr);
+    row-gap: 8px;
+  }
+  .score {
+    font-size: 13px;
+  }
+  .row-markets {
+    grid-column: 1 / -1;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 6px;
+  }
+  .odds {
+    min-width: 0;
+    padding: 0 4px;
+  }
+}

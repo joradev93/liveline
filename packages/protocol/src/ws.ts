@@ -9,8 +9,8 @@
  * state with version in [from, v). A client whose version is below `from` has missed
  * changes and must re-subscribe to get a fresh snapshot.
  */
-import type { EventStatus, MarketStatus, SportEvent } from './domain.js';
-import type { Topic } from './topics.js';
+import type { EventStatus, MarketStatus, SportEvent } from './domain';
+import type { Topic } from './topics';
 
 export interface SubMessage {
   t: 'sub';

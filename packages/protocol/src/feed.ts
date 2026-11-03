@@ -4,7 +4,7 @@
  * On connect the consumer gets one `feed:snapshot`, then ordered `feed:batch` messages.
  * `seq` increases by one per message; a consumer that sees a gap must reconnect.
  */
-import type { EventStatus, MarketStatus, SportEvent } from './domain.js';
+import type { EventStatus, MarketStatus, SportEvent } from './domain';
 
 export type FeedChange =
   | { k: 'price'; e: number; m: number; sel: Record<string, number>; ts: number }
