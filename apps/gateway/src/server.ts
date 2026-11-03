@@ -118,6 +118,9 @@ export class GatewayServer {
       json(res, this.feed.connected ? 200 : 503, { ok: this.feed.connected });
     });
 
+    // Lets load generators on another clock (e.g. k6 in Docker) measure their clock offset.
+    this.app.get('/time', (res) => json(res, 200, { now: Date.now() }));
+
     this.app.get('/stats', (res) => {
       json(res, 200, {
         clients: this.clients,

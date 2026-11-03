@@ -1,0 +1,10 @@
+{
+  "name": "@liveline/load",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "slow-client": "node slow-client.mjs",
+    "k6": "sh ./k6.sh"
+  }
+}

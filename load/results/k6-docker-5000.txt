@@ -1,0 +1,5 @@
+friendly_satoshi cpu=214.84% mem=1.486GiB / 7.651GiB
+devcontainer-frappe-1 cpu=5.22% mem=1.58GiB / 7.651GiB
+devcontainer-redis-queue-1 cpu=0.10% mem=13.93MiB / 7.651GiB
+devcontainer-redis-cache-1 cpu=0.12% mem=70.5MiB / 7.651GiB
+devcontainer-mariadb-1 cpu=0.03% mem=228.8MiB / 7.651GiB

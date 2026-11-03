@@ -1,0 +1,28 @@
+{
+  "clients": 0,
+  "connections": 2000,
+  "messagesIn": 2000,
+  "badMessages": 0,
+  "hub": {
+    "topics": 0,
+    "deltasSent": 1585426,
+    "snapshotsSent": 2000,
+    "bytesSent": 1072095286,
+    "deltasSkipped": 0,
+    "gapsSent": 0,
+    "resyncs": 0,
+    "catchUps": 0,
+    "flushes": 1012,
+    "lastFlushMs": 0.002458999995724298,
+    "maxFlushMs": 14.578957999998238
+  },
+  "feed": {
+    "connected": true,
+    "batches": 8910,
+    "changes": 213317,
+    "reconnects": 0,
+    "gaps": 0,
+    "lastBatchTs": 1793739886796
+  },
+  "memoryMb": 128
+}

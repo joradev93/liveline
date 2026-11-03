@@ -68,6 +68,8 @@ importers:
         specifier: workspace:*
         version: link:../feed-sim
 
+  load: {}
+
   packages/protocol:
     dependencies:
       zod:

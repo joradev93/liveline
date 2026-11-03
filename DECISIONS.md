@@ -104,3 +104,19 @@ Format: what — why — alternatives considered.
 
 - **What:** `noExternal: [/^@liveline\//, 'zod']`. Native modules (uWS, better-sqlite3) stay external.
 - **Why:** workspace packages export TypeScript source; the production bundle must not import `.ts`.
+
+## D15. k6 runs in Docker; plus a Node load generator
+
+- **What:** `load/k6.sh` runs `grafana/k6:0.54.0` in Docker (no global install). `load/swarm.mjs` is
+  a multi-process Node generator.
+- **Why:** the spec forbids global installs; Docker is available. k6 in the 10-CPU Docker VM
+  saturates at ~10k connections, before the gateway does, so a lighter generator was needed to find
+  the gateway's own limit.
+- **Alternatives:** k6 binary in the project folder (possible, but Docker was already approved);
+  `ws` + autocannon-style tools.
+
+## D16. Latency measured from the oldest change in the delta
+
+- **What:** delta `ts` = feed time of the oldest change coalesced into it.
+- **Why:** it is the honest worst case for every change in the delta (includes the coalescing wait).
+  Using the newest change would report ~50 ms less on average and hide the cost of coalescing.

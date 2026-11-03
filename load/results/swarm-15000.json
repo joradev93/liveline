@@ -1,0 +1,23 @@
+connected clients at gateway: 15000; measuring for 60s
+{
+  "clients": 15000,
+  "gatewayClients": 15000,
+  "open": 15000,
+  "failed": 0,
+  "closed": 0,
+  "deltas": 8432500,
+  "gaps": 0,
+  "snapshots": 15000,
+  "deltasPerSec": 140542,
+  "latencyMs": {
+    "p50": 101,
+    "p95": 139,
+    "p99": 149,
+    "max": 167
+  },
+  "gateway": {
+    "deltasSkipped": 0,
+    "maxFlushMs": 82,
+    "rssMb": 128
+  }
+}

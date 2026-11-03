@@ -1,0 +1,16 @@
+paused reading for 90s
+resumed reading
+{
+  "client": {
+    "snapshots": 12,
+    "deltas": 4992,
+    "gaps": 6,
+    "stale": 0
+  },
+  "gateway": {
+    "deltasSkipped": 708,
+    "gapsSent": 6,
+    "resyncs": 6,
+    "catchUps": 0
+  }
+}

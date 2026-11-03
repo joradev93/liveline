@@ -11,6 +11,6 @@ coverage/
 .lighthouseci/
 playwright-report/
 test-results/
-load/results/*.json
+load/results/*.log
 .DS_Store
 next-env.d.ts
