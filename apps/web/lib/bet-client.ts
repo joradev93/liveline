@@ -17,7 +17,7 @@ export function userId(): string {
   }
 }
 
-const headers = () => ({ 'content-type': 'application/json', 'x-user-id': userId() });
+const identity = () => ({ 'x-user-id': userId() });
 
 /**
  * Places one bet. The idempotency key belongs to this attempt: network failures are retried
@@ -32,7 +32,11 @@ export async function placeBet(
     try {
       const res = await fetch(`${BET_API_URL}/bets`, {
         method: 'POST',
-        headers: { ...headers(), 'idempotency-key': idempotencyKey },
+        headers: {
+          ...identity(),
+          'content-type': 'application/json',
+          'idempotency-key': idempotencyKey,
+        },
         body: JSON.stringify(request),
       });
       return (await res.json()) as PlaceBetResponse;
@@ -43,19 +47,20 @@ export async function placeBet(
   }
 }
 
-export async function fetchBalance(): Promise<number | null> {
-  try {
-    const res = await fetch(`${BET_API_URL}/me`, { headers: headers() });
-    return ((await res.json()) as { balanceCents: number }).balanceCents;
-  } catch {
-    return null;
-  }
-}
+export const fetchBalance = () => balanceRequest('/me', 'GET');
 
-export async function resetBalance(): Promise<number | null> {
+export const resetBalance = () => balanceRequest('/me/reset', 'POST');
+
+/**
+ * Balance in cents, or null when the service is not reachable or answers with an error.
+ * No JSON content type here: the requests have no body, and Fastify rejects an empty JSON body.
+ */
+async function balanceRequest(path: string, method: 'GET' | 'POST'): Promise<number | null> {
   try {
-    const res = await fetch(`${BET_API_URL}/me/reset`, { method: 'POST', headers: headers() });
-    return ((await res.json()) as { balanceCents: number }).balanceCents;
+    const res = await fetch(`${BET_API_URL}${path}`, { method, headers: identity() });
+    if (!res.ok) return null;
+    const { balanceCents } = (await res.json()) as { balanceCents?: unknown };
+    return typeof balanceCents === 'number' ? balanceCents : null;
   } catch {
     return null;
   }

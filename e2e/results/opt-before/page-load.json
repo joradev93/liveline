@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:3002/?sport=1",
+  "rate": 50,
+  "requests": 1500,
+  "errors": 0,
+  "achievedPerSec": 50,
+  "p50": "10.5 ms",
+  "p95": "12.7 ms",
+  "p99": "17.7 ms",
+  "max": "38.4 ms",
+  "avgKB": 313.6
+}

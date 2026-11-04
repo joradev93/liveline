@@ -98,7 +98,11 @@ export function MetricsPanel() {
       <div className="card-body">
         <dl className="stats">
           <Stat label="WS msgs/s" value={net?.msgsPerSec} />
-          <Stat label="KB/s" value={net?.kbPerSec} />
+          <Stat
+            label="KB/s"
+            value={net?.kbPerSec}
+            hint="WebSocket payload bytes (UTF-8). With compression off (the default) the network carries this plus 2–10 bytes of frame header per message"
+          />
           <Stat
             label="ops/s"
             value={net?.opsPerSec}

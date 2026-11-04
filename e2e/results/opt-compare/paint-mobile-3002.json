@@ -1,0 +1,33 @@
+{
+  "url": "http://localhost:3002/?sport=1",
+  "mobile": true,
+  "runs": 10,
+  "ttfb": {
+    "median": 10,
+    "max": 54
+  },
+  "htmlDone": {
+    "median": 232,
+    "max": 238
+  },
+  "dcl": {
+    "median": 241,
+    "max": 246
+  },
+  "fcp": {
+    "median": 252,
+    "max": 272
+  },
+  "lcp": {
+    "median": 260,
+    "max": 272
+  },
+  "cls": {
+    "median": 0,
+    "max": 0
+  },
+  "lcpElements": [
+    "team",
+    "H1"
+  ]
+}

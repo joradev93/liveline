@@ -72,7 +72,8 @@ ops              { m, sel:{"1":2.15,"X":3.30} } | { m, st:"suspended" }      mar
 | web     | WebSocket + `JSON.parse` + version checks in a **Web Worker**, posted in 16 ms batches                                    | the main thread only applies small batches                                                              |
 | web     | `useSyncExternalStore` with per-market/per-selection keys, a stable "market shape" selector                               | a price tick re-renders exactly one odds button ([D18](DECISIONS.md))                                   |
 | web     | odds flash = swapping two identical CSS animation classes on the DOM node                                                 | no React state, no forced reflow ([D19](DECISIONS.md))                                                  |
-| web     | RSC fetches the snapshot; window virtualizer with `initialRect`                                                           | first rows are in the HTML; hydration matches ([D21](DECISIONS.md))                                     |
+| web     | RSC renders the first 30 rows from a snapshot cached for 1 s; the WebSocket snapshot fills the rest                       | 35 → 16 KB HTML (gzip), 1 gateway request per sport per second ([D36](DECISIONS.md))                    |
+| web     | own window virtualizer: row height per breakpoint in CSS, rows moved by `transform`                                       | 10 KB less JS than a library; server HTML laid out right on phones ([D37](DECISIONS.md))                |
 | bet-api | lookup + validation + debit + insert + idempotency record in one synchronous SQLite transaction                           | 20 parallel requests with one key → exactly one bet ([D25](DECISIONS.md))                               |
 
 ## Measured numbers
@@ -84,10 +85,10 @@ files and commands: [METRICS.md](METRICS.md).
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | p99 tick→client < 150 ms         | **113 ms** at 2 000 clients, **134 ms** at 5 000 (k6); **149 ms** at 15 000 (Node load generator); includes the 100 ms coalescing window    | met                              |
 | max clients per gateway instance | **15 000** verified within the p99 target (gateway at ~48% of one core). Higher not measurable on one macOS machine (ephemeral port limit). | lower bound                      |
-| LCP < 1.5 s                      | **790 ms** mobile (simulated slow 4G, 4× CPU), **209 ms** desktop — Lighthouse 100/100/100                                                  | met                              |
+| LCP < 1.5 s                      | **784 ms** mobile (simulated slow 4G, 4× CPU), **211 ms** desktop — Lighthouse 100/100/100                                                  | met                              |
 | INP < 100 ms at 500 ticks/s      | **32 ms** (also 32 ms at 2 000 ticks/s with 4× CPU slowdown)                                                                                | met                              |
 | ~60 FPS scrolling under load     | **60.1–60.3 FPS**, frame p95 16.7 ms, 0 long tasks (500 and 2 000 ticks/s, 1× and 4× CPU)                                                   | met                              |
-| initial JS < 120 KB gzip         | **154.7 KB** gzip (133.0 KB brotli). Next.js 16 + React 19 runtime alone is 128.9 KB.                                                       | **missed** ([D28](DECISIONS.md)) |
+| initial JS < 120 KB gzip         | **145.5 KB** gzip (124.8 KB brotli). Next.js 16 + React 19 runtime alone is 128.8 KB.                                                       | **missed** ([D28](DECISIONS.md)) |
 | bet placement                    | p99 **2.15 ms** at 200 bets/s, **7.32 ms** at 1 000 bets/s                                                                                  | —                                |
 | backpressure                     | slow socket: 708 deltas skipped, 6 gaps → 6 resyncs, back in sync                                                                           | works                            |
 
@@ -126,6 +127,9 @@ VUS=5000 RAMP=60s HOLD=60s sh load/step.sh                         # k6 in Docke
 node load/swarm.mjs --clients 15000 --procs 8 --ramp 60 --hold 60   # Node generator
 node load/slow-client.mjs --pause 90                                 # real backpressure
 node e2e/measure-runtime.mjs --rate 2000 --cpu 4                     # FPS / INP in Chrome
+node e2e/measure-paint.mjs --mobile --gap 1200                       # FCP / LCP / CLS, throttled phone
+node load/page-load.mjs --rate 50 --duration 30                      # server render under load
+node e2e/delay-proxy.mjs --delay 300                                 # slow gateway for the web server
 ```
 
 ## Repository

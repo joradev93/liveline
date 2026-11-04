@@ -1,16 +1,17 @@
 'use client';
 
 import { sportTopic, type SnapshotMessage } from '@liveline/protocol';
-import { useWindowVirtualizer } from '@tanstack/react-virtual';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { useStore, useTopic, useTopicEventIds } from '@/lib/hooks';
+import { useWindowList } from '@/lib/window-list';
 import { EventRow } from './EventRow';
 
-const ROW_ESTIMATE = 76;
+/** `--row-h` of `.list` on desktop (globals.css); the browser reads the real value per breakpoint. */
+const DESKTOP_ROW_HEIGHT = 82;
 
 interface Props {
   sportId: number;
-  /** Snapshot fetched by the server component; seeds the store for the first paint. */
+  /** First rows of the snapshot, fetched by the server component; seeds the store for the first paint. */
   initial: SnapshotMessage | null;
 }
 
@@ -31,18 +32,12 @@ export function Board({ sportId, initial }: Props) {
   useTopic(topic);
   const ids = useTopicEventIds(topic);
 
-  const listRef = useRef<HTMLDivElement>(null);
-  const [scrollMargin, setScrollMargin] = useState(0);
-  useLayoutEffect(() => setScrollMargin(listRef.current?.offsetTop ?? 0), []);
-
-  const virtualizer = useWindowVirtualizer({
+  const { listRef, start, end } = useWindowList({
     count: ids.length,
-    estimateSize: () => ROW_ESTIMATE,
+    initialRowHeight: DESKTOP_ROW_HEIGHT,
     overscan: 8,
-    scrollMargin,
     // Server render and first client render use the same viewport guess, so they match.
-    initialRect: { width: 1280, height: 1000 },
-    getItemKey: (index) => ids[index] ?? index,
+    initialViewport: 1000,
   });
 
   if (ids.length === 0) {
@@ -54,16 +49,10 @@ export function Board({ sportId, initial }: Props) {
   }
 
   return (
-    <div ref={listRef} className="list" style={{ height: virtualizer.getTotalSize() }}>
-      {virtualizer.getVirtualItems().map((item) => (
-        <div
-          key={item.key}
-          ref={virtualizer.measureElement}
-          data-index={item.index}
-          className="list-item"
-          style={{ transform: `translateY(${item.start - scrollMargin}px)` }}
-        >
-          <EventRow eventId={ids[item.index]!} />
+    <div ref={listRef} className="list" style={{ height: `calc(var(--row-h) * ${ids.length})` }}>
+      {ids.slice(start, end).map((id, i) => (
+        <div key={id} className="list-item" style={{ '--i': start + i } as CSSProperties}>
+          <EventRow eventId={id} />
         </div>
       ))}
     </div>

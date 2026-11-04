@@ -118,17 +118,18 @@ pnpm --filter @liveline/web build && pnpm --filter @liveline/web start
 node e2e/measure-bundle.mjs
 ```
 
-| what                                                      | Day 4    | Day 6 (final)             |
-| --------------------------------------------------------- | -------- | ------------------------- |
-| initial JS, gzip (on the wire)                            | 150.4 KB | **154.7 KB** (8 files)    |
-| initial JS, same files with brotli q11 (computed locally) | —        | 133.0 KB                  |
-| — Next.js runtime + React DOM + Turbopack runtime (gzip)  | 128.6 KB | 128.9 KB                  |
-| — app code (gzip)                                         | 21.8 KB  | 25.8 KB (+ metrics panel) |
-| lazy JS after hydration (web-vitals)                      | —        | 2.5 KB                    |
-| HTML document, gzip                                       | 28.1 KB  | 33.2 KB                   |
+| what                                                      | Day 4    | Day 6                     | Day 8 (final)               |
+| --------------------------------------------------------- | -------- | ------------------------- | --------------------------- |
+| initial JS, gzip (on the wire)                            | 150.4 KB | 154.7 KB (8 files)        | **145.5 KB** (7 files)      |
+| initial JS, same files with brotli q11 (computed locally) | —        | 133.0 KB                  | 124.8 KB                    |
+| — Next.js runtime + React DOM + Turbopack runtime (gzip)  | 128.6 KB | 128.9 KB                  | 128.8 KB                    |
+| — app code (gzip)                                         | 21.8 KB  | 25.8 KB (+ metrics panel) | 16.8 KB (own virtualizer)   |
+| lazy JS after hydration (web-vitals)                      | —        | 2.5 KB                    | 2.5 KB                      |
+| HTML document, gzip                                       | 28.1 KB  | 33.2 KB                   | 15.7 KB (110.0 KB unzipped) |
 
 **Target < 120 KB: missed.** The framework alone (Next.js 16 App Router + React 19 DOM) is
-128.9 KB gzip, above the target before any app code. See DECISIONS D28 for what was tried.
+128.8 KB gzip, above the target before any app code. See DECISIONS D28 for what was tried, and
+D37 for the Day 8 change. Day 8 raw output: `e2e/results/opt-after/bundle.txt`.
 
 ## Web: Lighthouse (Lighthouse CI 0.16, Chrome, 3 runs, median)
 
@@ -190,6 +191,91 @@ node e2e/measure-runtime.mjs --rate 2000 --cpu 4
 | Lighthouse                      | desktop LCP element = side-panel hint text, painted late (615 ms in 2 of 3 runs) | server-rendered lead text in the main column                            | desktop LCP 209 ms in 3 of 3 runs                                           |
 | bundle measurement              | try: lazy-load betslip, metrics and event panel                                  | measured: −2.5 KB initial, +3.9 KB total                                | **reverted** (D28)                                                          |
 | `pnpm start` (Day 7)            | gateway crashed (stack overflow) when it started before feed-sim                 | reconnect from `error` or `close`, once per socket                      | all services start in any order; test added                                 |
+| e2e (Day 8)                     | betslip "reset" showed `€NaN`: empty body sent as JSON, bet-api answered 400     | no JSON content type without a body; non-2xx → no balance update        | reset works; e2e test resets after a placed bet (D39)                       |
+| paint measurement (Day 8)       | try: stream the page shell with `<Suspense>`                                     | measured: FCP −36…−180 ms, phone LCP +270 ms                            | **reverted** (D38)                                                          |
+
+## Web: optimisation pass (Day 8), before / after
+
+"Before" = commit `d13f83a` (Day 7), "after" = Day 8 working tree. Both production builds,
+`next start`, same feed-sim / gateway / bet-api processes, feed at 200 ticks/s. Port 3000 was taken
+by another app on this machine, so the web servers ran on other ports (`WEB_PORT=3002 pnpm e2e`).
+"+300 ms gateway" = the Next.js server reads snapshots through `e2e/delay-proxy.mjs`, to simulate
+network distance between web server and gateway. Raw: `e2e/results/opt-before/`,
+`e2e/results/opt-after/`, `e2e/results/opt-compare/`.
+
+```bash
+node e2e/delay-proxy.mjs --port 7012 --delay 300
+GATEWAY_HTTP=http://127.0.0.1:7012 pnpm --filter @liveline/web exec next start -p 3003
+node e2e/measure-bundle.mjs http://localhost:3002/?sport=1
+node e2e/measure-paint.mjs --url http://localhost:3002/?sport=1 --runs 10 --mobile --gap 1200
+node load/page-load.mjs --url http://localhost:3002/?sport=1 --rate 50 --duration 30
+node e2e/measure-runtime.mjs --url http://localhost:3002/?sport=1 --rate 500 --cpu 4
+# Lighthouse: the commands of the Lighthouse section, with --url=http://localhost:3002/?sport=1
+```
+
+**1. Server HTML carries only the first 30 rows** (was: the whole sport, in the HTML and again in
+the RSC payload). The WebSocket snapshot fills the rest right after hydration (D36).
+
+| Football page                                              | before   | after    |
+| ---------------------------------------------------------- | -------- | -------- |
+| HTML document, raw                                         | 317.2 KB | 110.0 KB |
+| HTML document, gzip                                        | 35.4 KB  | 15.7 KB  |
+| phone¹: whole HTML received (`responseEnd`), median of 10  | 332 ms   | 232 ms   |
+| phone¹: DOMContentLoaded end (hydration can start), median | 339 ms   | 241 ms   |
+| phone¹, +300 ms gateway: DOMContentLoaded end, median      | 526 ms   | 409 ms   |
+| phone¹: LCP (team name in the first row), median           | 256 ms   | 260 ms   |
+
+¹ `measure-paint.mjs --mobile`: real Chrome, 412×823, 150 ms RTT, 1.6 Mbit/s, 4× CPU slowdown, cold
+server cache (`--gap 1200`). LCP does not change: the first rows are at the start of the HTML; the
+removed data was at the end. What gets faster is everything after the HTML: script start and
+hydration, ~100 ms on this profile.
+
+**2. Streaming the shell with `<Suspense>`: tried, measured, reverted** (D38). Same phone profile:
+
+| with `<Suspense>` around the rows | FCP (before → with) | LCP (before → with) |
+| --------------------------------- | ------------------- | ------------------- |
+| gateway direct                    | 260 → 224 ms        | 264 → **536 ms**    |
+| +300 ms gateway                   | 408 → 228 ms        | 408 → **536 ms**    |
+
+The first paint (header, lead text) came earlier, but the rows ~270 ms later in both cases. In
+Lighthouse mobile with the +300 ms gateway, LCP was 2 649 ms (simulated). Raw files of this run were
+overwritten by the final run; the numbers are from its console output.
+
+**3. 1-second server cache for the snapshot** (D36). `page-load.mjs`, 50 page requests/s for 30 s:
+
+| GET /?sport=1   | before: p50 / p95 / p99  | after: p50 / p95 / p99 | gateway snapshot requests |
+| --------------- | ------------------------ | ---------------------- | ------------------------- |
+| gateway direct  | 10.5 / 12.7 / 17.7 ms    | 5.4 / 7.2 / 10.9 ms    | not counted               |
+| +300 ms gateway | 311.6 / 316.3 / 333.3 ms | 5.8 / 327.3 / 367.5 ms | 1 500 → 30 (1 per second) |
+
+"After" includes change 1 (smaller page). With a slow gateway, requests that arrive while the
+cache refreshes wait for that one request (p95/p99); all others are served from memory.
+
+**4. One store subscription per odds button** (was two: price and market status). **5. Own window
+virtualizer** instead of `@tanstack/react-virtual` (D37). Runtime, same machine, same run conditions
+(`measure-runtime.mjs --rate 500 --cpu 4`, raw `e2e/results/opt-compare/runtime-*`):
+
+| build  | FPS idle / scroll | frame p95 scroll | long tasks idle / scroll | sport switch worst | INP   |
+| ------ | ----------------- | ---------------- | ------------------------ | ------------------ | ----- |
+| before | 60 / 60.2         | 16.7 ms          | 0 / 0                    | 32 ms              | 72 ms |
+| after  | 60 / 60.1         | 16.8 ms          | 0 / 0                    | 32 ms              | 32 ms |
+
+No runtime change beyond noise: the "before" INP was 32 ms in the Day 6 run, and 72 ms (one
+interaction, one long task) in this one. Change 4 is too small to measure here (≈ 30 ops/s reach
+the store). Change 5 removed 9.2 KB gzip of initial JS (table above) and fixed a first-paint layout
+problem: in the server HTML, before JavaScript runs, rows overlapped by up to 63 px on a 390 px phone
+(3 px on desktop) because positions used one estimated height; now 0 px on every width (checked
+with Playwright, JavaScript disabled, 21 rows).
+
+A first version of change 5 put rows in normal flow between spacer elements. Lighthouse mobile then
+showed CLS 0.137 in 2 of 3 runs: when the top live event ends, every row moves up one row, and in
+normal flow that counts as layout shift. The library moved rows with `transform`, which the Layout
+Instability API does not count. The final version positions rows with `transform` too (same visible
+movement as before), and CLS is 0 again.
+
+Lighthouse (3 runs each, median, `lighthouse.txt` in the raw folders): unchanged within noise.
+Mobile LCP 794 → 784 ms, desktop 209 → 211 ms, +300 ms gateway mobile 808 → 788 ms; 100/100/100
+and CLS 0 in all of them.
 
 ## Bet API: POST /bets (k6, Docker)
 
@@ -215,6 +301,7 @@ Rejections are real state changes during the run (market suspended / event close
 
 ```bash
 pnpm build && pnpm e2e     # Playwright, system Chrome
+WEB_PORT=3002 pnpm e2e     # when port 3000 is taken (Day 8 run: 8 passed, 14.1 s)
 ```
 
 8 tests pass (13.1 s): server-rendered rows in HTML, live odds updates, event panel, sport switch,

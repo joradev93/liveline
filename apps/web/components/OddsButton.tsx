@@ -2,7 +2,7 @@
 
 import { formatOdds } from '@liveline/protocol';
 import { memo, useLayoutEffect, useRef } from 'react';
-import { useMarketStatus, usePrice, useStore } from '@/lib/hooks';
+import { useSelection, useStore } from '@/lib/hooks';
 import { renderStats } from '@/lib/render-stats';
 import { useBetslip, useIsSelected } from '@/lib/ui-context';
 
@@ -17,7 +17,8 @@ interface Props {
 }
 
 /**
- * One odds cell. Subscribes to exactly one price, so a tick re-renders only this button.
+ * One odds cell. Subscribes to exactly one price (and its market status), so a tick re-renders
+ * only this button.
  * The up/down flash is a CSS animation started by swapping a class on the DOM node,
  * not React state: no extra render, no forced layout.
  */
@@ -30,8 +31,7 @@ export const OddsButton = memo(function OddsButton({
 }: Props) {
   const store = useStore();
   const slip = useBetslip();
-  const price = usePrice(marketId, k);
-  const status = useMarketStatus(marketId);
+  const { price, status } = useSelection(marketId, k);
   const selected = useIsSelected(marketId, k);
   const ref = useRef<HTMLButtonElement>(null);
   const previous = useRef(price);

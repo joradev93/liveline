@@ -2,9 +2,10 @@
 
 import { eventTopic } from '@liveline/protocol';
 import { useEffect, useRef } from 'react';
-import { formatStart, sportName } from '@/lib/format';
+import { sportName } from '@/lib/format';
 import { useEvent, useMarketShape, useTopic } from '@/lib/hooks';
 import { OddsButton } from './OddsButton';
+import { StartsIn } from './StartsIn';
 
 /** Side panel with every market of one event, from the `event:{id}` topic. */
 export function EventPanel({ eventId, onClose }: { eventId: number; onClose: () => void }) {
@@ -51,12 +52,10 @@ export function EventPanel({ eventId, onClose }: { eventId: number; onClose: () 
                       {event.score?.[0] ?? 0}:{event.score?.[1] ?? 0}
                     </span>
                   </>
+                ) : event.status === 'settled' ? (
+                  <span className="starts">Ended</span>
                 ) : (
-                  <span className="starts">
-                    {event.status === 'settled'
-                      ? 'Ended'
-                      : `Starts ${formatStart(event.start, Date.now())}`}
-                  </span>
+                  <StartsIn start={event.start} prefix="Starts " />
                 )}
               </div>
             )}

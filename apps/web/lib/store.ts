@@ -53,6 +53,14 @@ const STATUS_ORDER: Record<EventStatus, number> = {
   settled: 2,
 };
 
+/** List order: live first, then upcoming by start time, ended last. Shared with the server render. */
+export function compareEvents(
+  a: Pick<SportEvent, 'id' | 'status' | 'start'>,
+  b: Pick<SportEvent, 'id' | 'status' | 'start'>,
+): number {
+  return STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.start - b.start || a.id - b.id;
+}
+
 /** Store keys: one per market, per event and per topic list. Components subscribe to exactly one. */
 export const marketKey = (id: number) => `m:${id}`;
 export const eventKey = (id: number) => `e:${id}`;
@@ -99,7 +107,7 @@ export class LiveStore {
     let ids = this.sorted.get(topic);
     if (!ids) {
       const set = this.topicEvents.get(topic);
-      ids = set ? [...set].sort(this.compareEvents) : EMPTY;
+      ids = set ? [...set].sort(this.compareIds) : EMPTY;
       this.sorted.set(topic, ids);
     }
     return ids;
@@ -283,13 +291,10 @@ export class LiveStore {
     }
   }
 
-  private readonly compareEvents = (a: number, b: number): number => {
+  private readonly compareIds = (a: number, b: number): number => {
     const ea = this.events.get(a);
     const eb = this.events.get(b);
-    if (!ea || !eb) return 0;
-    return (
-      STATUS_ORDER[ea.status] - STATUS_ORDER[eb.status] || ea.start - eb.start || ea.id - eb.id
-    );
+    return ea && eb ? compareEvents(ea, eb) : 0;
   };
 }
 

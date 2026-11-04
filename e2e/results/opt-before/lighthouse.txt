@@ -1,0 +1,5 @@
+Lighthouse CI 0.16, 3 runs per config, median. 3002 = gateway direct, 3003 = via e2e/delay-proxy.mjs (+300 ms).
+lh-mobile          median{perf:100,a11y:100,bp:100,fcp:794,lcp:794,tbt:2,cls:0,si:794}
+lh-desktop         median{perf:100,a11y:100,bp:100,fcp:209,lcp:209,tbt:0,cls:0,si:227}
+lh-mobile-gw300    median{perf:100,a11y:100,bp:100,fcp:808,lcp:808,tbt:5,cls:0,si:914}
+lh-desktop-gw300   median{perf:100,a11y:100,bp:100,fcp:217,lcp:217,tbt:0,cls:0,si:398}

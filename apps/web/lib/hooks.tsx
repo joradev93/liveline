@@ -1,6 +1,6 @@
 'use client';
 
-import type { Topic } from '@liveline/protocol';
+import type { MarketStatus, Topic } from '@liveline/protocol';
 import {
   createContext,
   useCallback,
@@ -29,10 +29,25 @@ function useKey<T>(key: string, get: () => T): T {
   return useSyncExternalStore(subscribe, get, get);
 }
 
-/** One selection price. Only this cell re-renders when the price changes. */
-export function usePrice(marketId: number, k: string): number | undefined {
+/**
+ * Price of one selection and the status of its market, with one store subscription (there are
+ * hundreds of odds buttons on screen). Only this cell re-renders when one of the two changes:
+ * the snapshot is a string, so React compares it by value.
+ */
+export function useSelection(
+  marketId: number,
+  k: string,
+): { price: number | undefined; status: MarketStatus | undefined } {
   const store = useStore();
-  return useKey(marketKey(marketId), () => store.getPrice(marketId, k));
+  const state = useKey(marketKey(marketId), () => {
+    const market = store.getMarket(marketId);
+    return market ? `${market.sel.find((s) => s.k === k)?.p ?? ''}|${market.status}` : '';
+  });
+  const [price = '', status] = state.split('|');
+  return {
+    price: price === '' ? undefined : Number(price),
+    status: status as MarketStatus | undefined,
+  };
 }
 
 export function useMarketStatus(marketId: number) {

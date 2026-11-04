@@ -36,6 +36,9 @@ test('places a single bet and updates the balance', async ({ page }) => {
   await expect(page.locator('.balance')).toContainText('975.00');
   await expect(page.locator('.receipts li')).toHaveCount(1);
   await expect(page.locator('.leg')).toHaveCount(0);
+  // Reset after the balance is loaded (the beforeEach reset can race the first balance load).
+  await page.getByRole('button', { name: 'reset' }).click();
+  await expect(page.locator('.balance')).toContainText('1,000.00');
 });
 
 test('places a multiple at the combined odds', async ({ page }) => {

@@ -15,6 +15,7 @@ export interface FeedMetrics {
   connected: boolean;
   /** WebSocket messages received per second. */
   msgsPerSec: number;
+  /** WebSocket payload bytes per second (UTF-8), in KB. */
   kbPerSec: number;
   /** Market/event ops applied per second (after coalescing). */
   opsPerSec: number;

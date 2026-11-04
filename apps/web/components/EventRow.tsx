@@ -1,11 +1,12 @@
 'use client';
 
 import { memo } from 'react';
-import { formatStart, selectionLabel } from '@/lib/format';
+import { selectionLabel } from '@/lib/format';
 import { useEvent, useMarketShape } from '@/lib/hooks';
 import { renderStats } from '@/lib/render-stats';
 import { useSelectEvent } from '@/lib/ui-context';
 import { OddsButton } from './OddsButton';
+import { StartsIn } from './StartsIn';
 
 /** Row header re-renders only on event changes (status, score); odds cells update on their own. */
 export const EventRow = memo(function EventRow({ eventId }: { eventId: number }) {
@@ -26,10 +27,10 @@ export const EventRow = memo(function EventRow({ eventId }: { eventId: number })
               {event.score?.[0] ?? 0}:{event.score?.[1] ?? 0}
             </span>
           </>
+        ) : event.status === 'settled' ? (
+          <span className="starts">ended</span>
         ) : (
-          <span className="starts" suppressHydrationWarning>
-            {event.status === 'settled' ? 'ended' : formatStart(event.start, Date.now())}
-          </span>
+          <StartsIn start={event.start} />
         )}
       </div>
       <button type="button" className="row-teams" onClick={() => selectEvent(event.id)}>

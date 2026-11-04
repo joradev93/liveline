@@ -181,7 +181,10 @@ button {
 
 /* Virtualized list */
 
+/* One row height per breakpoint, in CSS: the server HTML is positioned right on any screen.
+   Rows need 78.6 px (desktop) and 138.6 px (phone); the rest is headroom for other fonts. */
 .list {
+  --row-h: 82px;
   position: relative;
 }
 
@@ -190,7 +193,13 @@ button {
   top: 0;
   left: 0;
   width: 100%;
+  height: var(--row-h);
   padding-bottom: 6px;
+  transform: translateY(calc(var(--row-h) * var(--i)));
+}
+
+.list-item > .row {
+  height: 100%;
 }
 
 .row {
@@ -534,6 +543,9 @@ button {
   }
   .layout {
     padding: 12px 12px 96px;
+  }
+  .list {
+    --row-h: 142px;
   }
   .row {
     grid-template-columns: 60px minmax(0, 1fr);

@@ -1,0 +1,13 @@
+{
+  "url": "http://localhost:3003/?sport=1",
+  "rate": 50,
+  "requests": 1500,
+  "errors": 0,
+  "achievedPerSec": 50,
+  "p50": "5.8 ms",
+  "p95": "327.3 ms",
+  "p99": "367.5 ms",
+  "max": "431.2 ms",
+  "avgKB": 109.8
+}
+proxy before {"forwarded":1699} after {"forwarded":1729}

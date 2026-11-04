@@ -5,6 +5,7 @@
  */
 import type { ServerMessage, Topic } from '@liveline/protocol';
 import { TopicSync } from './topic-sync';
+import { utf8Length } from './utf8';
 import type { FeedItem, FeedMetrics, FromWorker, ToWorker } from './worker-protocol';
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -46,7 +47,7 @@ function connect() {
 
 function onMessage(text: string) {
   counters.msgs++;
-  counters.bytes += text.length;
+  counters.bytes += utf8Length(text);
   const now = Date.now();
   const result = sync.handle(JSON.parse(text) as ServerMessage, now);
   if (result.action === 'resubscribe') send({ t: 'sub', topics: [result.topic] });

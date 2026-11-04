@@ -153,6 +153,8 @@ Format: what — why — alternatives considered.
 
 ## D21. Window virtualizer with `initialRect`
 
+**Replaced on Day 8 by D37** (own virtualizer, same idea for the server render).
+
 - **What:** `useWindowVirtualizer` with `initialRect: 1280×1000`.
 - **Why:** the server has no viewport. With a fixed guess, the server renders the first rows (good
   LCP) and the first client render produces the same rows, so hydration matches.
@@ -262,3 +264,73 @@ Format: what — why — alternatives considered.
   are transparent): 4.1 MB for 24 s at 960×600, 8 fps.
 - **Why:** Playwright video needs its own ffmpeg download outside the project, and the system ffmpeg
   on this machine is broken (missing `libx265`). See BLOCKERS.md B3.
+
+## D36. Server render: first 30 rows only, snapshot cached for 1 s
+
+- **What:** the page sends only the first 30 events (in list order, `compareEvents` shared with the
+  store) to `<Board>`, plus the total count for the heading. Snapshots are fetched through
+  `createSnapshotCache` (`apps/web/lib/snapshot-cache.ts`): one gateway request per sport per second,
+  shared by all page requests in that second, also concurrent ones; a failed fetch is not kept.
+- **Why:** the full sport snapshot was in the HTML twice (rendered rows + RSC payload): 317 KB raw
+  for ~12 visible rows. The WebSocket snapshot replaces it right after hydration anyway. Measured:
+  HTML 35.4 → 15.7 KB gzip, hydration starts ~100 ms earlier on a throttled phone; with a 300 ms
+  gateway, 50 page requests/s cause 30 gateway requests in 30 s instead of 1 500 (METRICS.md, Day 8).
+- **No stale entries:** an entry older than 1 s is never served (no stale-while-revalidate). After a
+  quiet period a stale snapshot would show odds and events from minutes ago, and every row would
+  change at hydration.
+- **Alternatives:** Next.js data cache (`fetch` with `revalidate: 1`) serves stale data after quiet
+  periods and writes to the cache store on every refresh. On Vercel (serverless) this in-memory cache
+  is per instance, which is enough for its purpose.
+
+## D37. Own window virtualizer instead of `@tanstack/react-virtual`
+
+- **What:** `apps/web/lib/window-list.ts` (~100 lines): every row has one height per breakpoint,
+  set in CSS (`.list { --row-h: 82px }`, 142 px under 760 px). Rows are absolutely positioned with
+  `transform: translateY(calc(var(--row-h) * var(--i)))`. The hook only decides which rows to render
+  (scroll handler in `requestAnimationFrame`, re-render only when the visible range changes) and reads
+  `--row-h` from CSS on mount and resize.
+- **Why:** the library was 10.4 KB gzip on its own (34 KB minified), the largest app-side part of the
+  initial JS; initial JS 154.7 → 145.5 KB gzip. Rows here never vary in height within a breakpoint
+  (one-line names, fixed button heights: measured 78.6 px and 138.6 px for every row of all six
+  sports), so per-row measuring was not needed. Positions in CSS also fix the server HTML: the library
+  positioned rows with one estimated height before hydration, so rows overlapped by up to 63 px on
+  phones until JavaScript ran.
+- **Transform, not normal flow:** a first version put rows in normal flow between spacers. When the
+  top live event ends, every row moves up one row; in normal flow that counted as CLS 0.137 in
+  Lighthouse mobile. Transforms are not counted by the Layout Instability API (the library used them
+  too). The movement users see is the same.
+- **Trade-off:** a row whose content grows past `--row-h` (for example a much larger system font)
+  would overlap the next row. There is headroom (82 vs 78.6 px, 142 vs 138.6 px); variable heights
+  would need per-row measuring again.
+
+## D38. No `<Suspense>` streaming around the rows (tried, reverted)
+
+- **Tried:** render header, heading and lead text first; stream the rows and the event count when
+  the gateway snapshot arrives.
+- **Measured (real Chrome, throttled phone):** FCP 260 → 224 ms (gateway direct) and 408 → 228 ms
+  (gateway +300 ms), but LCP 264 → 536 ms and 408 → 536 ms. The LCP element on phones is a row, and
+  the streamed rows appeared ~270 ms after the shell, even when the snapshot was ready almost at
+  once. Most likely cause: React (19.2+) waits a short time before revealing streamed Suspense
+  content, to reveal more boundaries together.
+- **Decision:** reverted. With the 1 s snapshot cache (D36) most page requests do not wait for the
+  gateway at all, which removes most of what streaming would hide.
+
+## D39. Bet client: no JSON content type on requests without a body
+
+- **What:** `GET /me` and `POST /me/reset` send only `X-User-Id`; a non-2xx answer or a missing
+  `balanceCents` returns `null` (no balance update).
+- **Why:** `POST /me/reset` sent `content-type: application/json` with an empty body; Fastify
+  rejects that with 400, and the client read `balanceCents` from the error body: the betslip showed
+  `€NaN`. The e2e test passed only when the first balance load finished after the reset click.
+  The test now also resets after a placed bet, when the balance is surely loaded.
+
+## D40. Shared clock for "starts in" labels; KB/s counts UTF-8 bytes
+
+- **"starts in":** labels of upcoming events used `Date.now()` during render, so they changed only
+  when the row re-rendered for another reason. Now `useNow()` (`apps/web/lib/clock.ts`): one 15 s
+  interval for all labels, running only while a label is mounted. The server render and hydration
+  still use `Date.now()` (the span keeps `suppressHydrationWarning`).
+- **KB/s:** the worker summed `string.length` (UTF-16 code units). It now counts UTF-8 bytes
+  (`utf8Length`, no encoded copy), which is the WebSocket payload size. With compression off (the
+  default) the network carries this plus 2–10 bytes of frame header per message. All feed text is
+  ASCII today, so the shown values do not change; the number is now correct for any text.

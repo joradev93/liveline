@@ -1,0 +1,22 @@
+== curl (10 requests each, server-side timing)
+3002 ttfb_ms=0.018588 total_ms=0.021345 gzip_bytes=35907
+3002 ttfb_ms=0.010251 total_ms=0.012204 gzip_bytes=35907
+3002 ttfb_ms=0.012033 total_ms=0.013829 gzip_bytes=35907
+3002 ttfb_ms=0.009418 total_ms=0.011277 gzip_bytes=35907
+3002 ttfb_ms=0.009620 total_ms=0.011407 gzip_bytes=35907
+3002 ttfb_ms=0.009048 total_ms=0.012365 gzip_bytes=35905
+3002 ttfb_ms=0.009117 total_ms=0.010947 gzip_bytes=35905
+3002 ttfb_ms=0.007931 total_ms=0.009667 gzip_bytes=35905
+3002 ttfb_ms=0.007240 total_ms=0.009064 gzip_bytes=35905
+3002 ttfb_ms=0.007484 total_ms=0.009198 gzip_bytes=35905
+3003 ttfb_ms=0.332327 total_ms=0.335172 gzip_bytes=35904
+3003 ttfb_ms=0.322954 total_ms=0.326266 gzip_bytes=36116
+3003 ttfb_ms=0.324322 total_ms=0.327660 gzip_bytes=36139
+3003 ttfb_ms=0.325493 total_ms=0.328631 gzip_bytes=36180
+3003 ttfb_ms=0.323697 total_ms=0.328859 gzip_bytes=36268
+3003 ttfb_ms=0.328614 total_ms=0.332670 gzip_bytes=36283
+3003 ttfb_ms=0.322523 total_ms=0.326079 gzip_bytes=36284
+3003 ttfb_ms=0.317473 total_ms=0.319295 gzip_bytes=36286
+3003 ttfb_ms=0.318263 total_ms=0.320079 gzip_bytes=36284
+3003 ttfb_ms=0.315922 total_ms=0.318144 gzip_bytes=36271
+raw_html_bytes 326272
