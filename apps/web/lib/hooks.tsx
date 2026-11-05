@@ -110,3 +110,18 @@ export function useTopic(topic: Topic | null): void {
     return feed.subscribe(topic);
   }, [feed, topic]);
 }
+
+const noSubscribe = () => () => {};
+
+/**
+ * Live number of events of a sport, pushed by the gateway. Undefined until the first `counts`
+ * message (and in the server render): callers then show the count from the server render.
+ */
+export function useSportCount(sportId: number): number | undefined {
+  const feed = useFeed();
+  return useSyncExternalStore(
+    feed?.subscribeCounts ?? noSubscribe,
+    () => feed?.counts?.[sportId],
+    () => undefined,
+  );
+}

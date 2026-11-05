@@ -15,6 +15,9 @@ interface SocketData {
   sub?: Subscriber;
 }
 
+/** uWS pub/sub topic every socket joins: per-sport event counts. */
+const COUNTS = 'counts';
+
 const decoder = new TextDecoder();
 const errorPayload = (code: ErrorMessage['code'], message: string) =>
   JSON.stringify({ t: 'error', code, message } satisfies ErrorMessage);
@@ -25,6 +28,8 @@ export class GatewayServer {
   private listenSocket: UWS.us_listen_socket | null = null;
   private clients = 0;
   private boundPort = 0;
+  /** Latest `counts` message, sent to new sockets and served at `GET /counts`. */
+  private countsPayload: string | null = null;
   readonly counters = { connections: 0, messagesIn: 0, badMessages: 0 };
 
   constructor(
@@ -55,6 +60,12 @@ export class GatewayServer {
     });
   }
 
+  /** Send a new `counts` message to every connected socket. */
+  publishCounts(payload: string): void {
+    this.countsPayload = payload;
+    this.app.publish(COUNTS, payload, false);
+  }
+
   close(): void {
     if (this.listenSocket) uWS.us_listen_socket_close(this.listenSocket);
     this.listenSocket = null;
@@ -79,6 +90,8 @@ export class GatewayServer {
         };
         this.clients++;
         this.counters.connections++;
+        ws.subscribe(COUNTS);
+        if (this.countsPayload) ws.send(this.countsPayload, false);
       },
       message: (ws, message) => {
         const sub = ws.getUserData().sub;
@@ -128,6 +141,17 @@ export class GatewayServer {
         hub: this.hub.stats,
         feed: { connected: this.feed.connected, ...this.feed.counters },
         memoryMb: Math.round(process.memoryUsage().rss / 1048576),
+      });
+    });
+
+    this.app.get('/counts', (res) => {
+      if (!this.countsPayload) return json(res, 503, { error: 'feed not ready' });
+      const payload = this.countsPayload;
+      res.cork(() => {
+        res.writeHeader('content-type', 'application/json');
+        res.writeHeader('access-control-allow-origin', '*');
+        res.writeHeader('cache-control', 'no-store');
+        res.end(payload);
       });
     });
 

@@ -90,6 +90,13 @@ export class MarketState {
     return topic.kind === 'sport' ? KNOWN_SPORTS.has(topic.id) : this.events.has(topic.id);
   }
 
+  /** Number of events per known sport (0 for a sport without events), keyed by sport id. */
+  sportCounts(): Record<string, number> {
+    const counts: Record<string, number> = {};
+    for (const id of KNOWN_SPORTS) counts[id] = this.bySport.get(id)?.size ?? 0;
+    return counts;
+  }
+
   /** Snapshot payload for a topic: sport topics carry main markets only. */
   snapshot(topic: ParsedTopic): SportEvent[] {
     if (topic.kind === 'event') {

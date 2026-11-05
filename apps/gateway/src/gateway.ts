@@ -1,4 +1,5 @@
 import { FeedClient } from '@liveline/feed-sim/client';
+import { CountsTracker } from './counts.js';
 import { TopicHub } from './hub.js';
 import { GatewayServer } from './server.js';
 import { MarketState } from './state.js';
@@ -47,9 +48,15 @@ export async function startGateway(config: GatewayConfig) {
     maxBackpressure: config.maxBackpressure,
   });
 
+  const counts = new CountsTracker(state);
+
   feed.start();
   await server.listen();
-  const timer = setInterval(() => hub.flush(), config.flushMs);
+  const timer = setInterval(() => {
+    hub.flush();
+    const changed = counts.poll();
+    if (changed) server.publishCounts(changed);
+  }, config.flushMs);
 
   return {
     hub,

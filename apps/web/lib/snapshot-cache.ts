@@ -20,27 +20,39 @@ export function firstRows(snapshot: SnapshotMessage, rows = FIRST_PAINT_ROWS): F
   return { total: snapshot.events.length, snapshot: { ...snapshot, events } };
 }
 
-type Load = (sportId: number) => Promise<SnapshotMessage | null>;
-
 /**
- * Per-sport snapshot cache for the server render: at most one gateway request per sport per
- * `ttlMs`, shared by all page requests in that window (also by concurrent ones). A failed load
- * (null) is not kept, so the next request tries again. No stale entries are served: odds move
- * every second, and the WebSocket replaces this snapshot right after hydration anyway.
+ * Cache for the server render: at most one load per key per `ttlMs`, shared by all page requests
+ * in that window (also by concurrent ones). A failed load (null) is not kept, so the next request
+ * tries again. No stale entries are served.
  */
-export function createSnapshotCache(load: Load, ttlMs: number, now: () => number = Date.now) {
-  const entries = new Map<number, { at: number; value: Promise<FirstPaintSnapshot | null> }>();
-  return (sportId: number): Promise<FirstPaintSnapshot | null> => {
-    const hit = entries.get(sportId);
+export function createTtlCache<K, V>(
+  load: (key: K) => Promise<V | null>,
+  ttlMs: number,
+  now: () => number = Date.now,
+) {
+  const entries = new Map<K, { at: number; value: Promise<V | null> }>();
+  return (key: K): Promise<V | null> => {
+    const hit = entries.get(key);
     if (hit && now() - hit.at < ttlMs) return hit.value;
-    const entry = {
-      at: now(),
-      value: load(sportId).then((s) => (s ? firstRows(s) : null)),
-    };
-    entries.set(sportId, entry);
+    const entry = { at: now(), value: load(key) };
+    entries.set(key, entry);
     void entry.value.then((v) => {
-      if (v === null && entries.get(sportId) === entry) entries.delete(sportId);
+      if (v === null && entries.get(key) === entry) entries.delete(key);
     });
     return entry.value;
   };
+}
+
+type Load = (sportId: number) => Promise<SnapshotMessage | null>;
+
+/**
+ * Per-sport snapshot cache for the server render (see `createTtlCache`). Odds move every second,
+ * and the WebSocket replaces this snapshot right after hydration anyway.
+ */
+export function createSnapshotCache(load: Load, ttlMs: number, now: () => number = Date.now) {
+  return createTtlCache(
+    (sportId: number) => load(sportId).then((s) => (s ? firstRows(s) : null)),
+    ttlMs,
+    now,
+  );
 }

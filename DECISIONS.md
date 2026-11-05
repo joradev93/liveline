@@ -334,3 +334,69 @@ Format: what — why — alternatives considered.
   (`utf8Length`, no encoded copy), which is the WebSocket payload size. With compression off (the
   default) the network carries this plus 2–10 bytes of frame header per message. All feed text is
   ASCII today, so the shown values do not change; the number is now correct for any text.
+
+## D41. Docker base image: Debian 13 (trixie) with build tools in the build stage only
+
+- **What:** `node:22-trixie-slim` for both stages; the build stage installs `git`, `python3`,
+  `make`, `g++`.
+- **Why:** found on the first Fly.io deploy. The uWebSockets.js Linux binary needs `GLIBC_2.38`
+  (Debian 12 has 2.36), the package is a GitHub dependency (npm needs `git`), and better-sqlite3
+  compiled from source on the builder (no compiler in the slim image).
+- **Alternatives:** stay on bookworm and pin an older uWS (loses the measured version); Alpine
+  (musl: uWS ships glibc binaries only); a distroless runtime (smaller, but no shell for
+  `fly ssh console` checks).
+
+## D42. Fly.io sizing: one machine per app, 256 MB + 256 MB swap
+
+- **What:** `shared-cpu-1x`, 256 MB, `swap_size_mb = 256`, deployed with `--ha=false`.
+- **Why:** one feed-sim machine is required (two would be two different feeds), one bet-api
+  machine is required (SQLite, one writer), and one gateway is enough for portfolio traffic. On Fly
+  each service used 90.5–97.9 MB RSS with 109.3–116.2 MB still available (deploy/README.md). Swap turns a
+  short spike into a slowdown instead of an out-of-memory restart. Fly has no spending limit, so a
+  fixed machine count keeps the cost fixed.
+- **Alternatives:** 512 MB (higher price; needed only for load tests with thousands of
+  clients, `fly scale memory 512`); scale to zero (`auto_stop_machines`): feed-sim gets no proxy
+  traffic, so it would never wake up, and the live feed would stop.
+
+## D43. Vercel: function region `fra1`, load slider left on
+
+- **What:** `"regions": ["fra1"]` in `apps/web/vercel.json`; `LOAD_CONTROL` not set.
+- **Why:** the RSC page fetches the gateway snapshot (Fly `ams`) on every cache miss, on the LCP
+  path; the Vercel default region is in the US. The slider is part of the demo; it is limited to
+  50–2000 ticks/s and goes through the server route with a token, so the browser never sees the
+  feed-sim token.
+- **Alternatives:** `LOAD_CONTROL=off` (read-only demo, set on Vercel without a code change).
+
+## D44. Mobile: compact metrics strip and separate sheets; green/red grades
+
+- **What:** below 1101 px the side column becomes a bottom bar with two buttons: a compact metrics
+  strip (feed load, ops/s, latency p50/p99, FPS) that is always visible, and the betslip button.
+  Each opens its own bottom sheet. Metrics are measured once in `LiveMetricsProvider` and shared
+  by the strip and the full panel. Values get a green (good) or red (bad) colour from
+  `lib/metric-grade.ts`; between the two limits, and for load numbers (msgs/s, KB/s, ops/s,
+  renders/s), there is no colour.
+- **Why:** on a phone the metrics were inside the betslip sheet, so a visitor could not watch the
+  list and the numbers at the same time. Only red was shown, so a healthy page looked
+  unmeasured. Limits: INP and LCP use the web.dev good/poor limits (200/500 ms, 2.5/4 s); latency
+  p99 good up to 250 ms, bad above 500 ms (internet path plus up to 100 ms coalescing, wider than
+  the 150 ms single-machine gateway target); FPS good from 55, bad below 50, no colour at 0
+  (hidden tab).
+- **Alternatives:** metrics sheet open by default (covers most of the list on a phone); one sheet
+  with tabs (still hides the numbers while betting); two measuring components (two rAF loops).
+
+## D45. Event count per sport: pushed over the WebSocket
+
+- **What:** each sport tab shows a badge with its number of events. The gateway keeps the counts
+  (`MarketState.sportCounts`), checks them after every flush (`CountsTracker`), and publishes a
+  `{ t:"counts", counts }` message to every socket when they change (uWS pub/sub topic `counts`)
+  and once on connect. `GET /counts` serves the same message for the server render, so the badges
+  are in the first HTML. The heading count ("248 events") uses the same live value.
+- **Why:** counts change whenever a settled event is replaced by a new one, which can be another
+  sport, so a value from the server render goes stale within seconds. The client already has one
+  WebSocket; a push costs one 73-byte message per change (`curl -s localhost:7002/counts | wc -c`)
+  and no extra requests. Measured locally
+  at 2000 ticks/s: 24 changes in 30 s. The load-test numbers in METRICS.md were measured before
+  this message existed (the k6 and swarm scripts skip it).
+- **Alternatives:** counts from the server render only (stale until the next navigation); the
+  browser polls `GET /counts` (a second channel next to the WebSocket, and up to one poll interval
+  late); a versioned `counts` topic (versions add nothing: each message carries all counts).

@@ -1,94 +1,65 @@
 'use client';
 
 import { MAX_TICK_RATE, MIN_TICK_RATE } from '@liveline/protocol';
-import { useEffect, useRef, useState } from 'react';
-import { useFeed } from '@/lib/hooks';
-import { renderStats } from '@/lib/render-stats';
-import type { FeedMetrics } from '@/lib/worker-protocol';
+import { useFeedLoad, useLiveMetrics } from '@/lib/live-metrics';
+import { GRADE, type Grade } from '@/lib/metric-grade';
 
-interface MainThread {
-  fps: number;
-  /** Frames slower than 50 ms in the last second. */
-  slowFrames: number;
-  oddsRenders: number;
-  longTasks: number;
-}
+/**
+ * One text per metric: the tooltip on desktop and the "What do these numbers mean?" list, which
+ * also works on touch screens (no hover there). Colour limits are in lib/metric-grade.ts.
+ */
+export const HELP = {
+  msgs: {
+    label: 'WS msgs/s',
+    text: 'WebSocket messages this browser receives per second. The gateway sends at most one message per topic every 100 ms.',
+  },
+  kb: {
+    label: 'KB/s',
+    text: 'Data received per second: the WebSocket payload in UTF-8 bytes. With compression off (the default) the network adds 2–10 bytes of frame header per message.',
+  },
+  ops: {
+    label: 'ops/s',
+    text: 'Price, status and score changes applied per second. Several ticks on one market within 100 ms are merged into one change.',
+  },
+  latency: {
+    label: 'tick→client p50 / p99',
+    text: 'Time from a price change in the feed to its arrival in this browser, over the last 5 s. p50 is the median: half of the updates arrive faster. p99: 99 of 100 updates arrive faster, so it shows the slow cases. Includes the up to 100 ms the gateway waits to merge changes. Uses the server clock and this device clock, so a device clock that is off shifts the number. Green: p99 up to 250 ms; red: p99 above 500 ms.',
+  },
+  fps: {
+    label: 'FPS',
+    text: 'Frames the page draws per second. 60 is smooth. Green from 55; red below 50.',
+  },
+  slow: {
+    label: 'slow frames/s',
+    text: 'Frames per second that took longer than 50 ms. These are visible stutters. Green at 0; red from 1.',
+  },
+  renders: {
+    label: 'odds cells rendered/s',
+    text: 'Odds buttons React re-rendered per second. A price change re-renders only its own button, not the row or the list.',
+  },
+  longTasks: {
+    label: 'long tasks',
+    text: 'Main-thread tasks longer than 50 ms since the page loaded. They delay taps and scrolling. Green at 0. Chrome and Edge only; other browsers show —.',
+  },
+  inp: {
+    label: 'INP',
+    text: 'Interaction to Next Paint: the delay from a tap, click or key press to the next frame on screen. Shows about the slowest interaction so far. Green up to 200 ms; red above 500 ms.',
+  },
+  lcp: {
+    label: 'LCP',
+    text: 'Largest Contentful Paint: when the biggest element of the first screen appeared, measured from the start of the page load. Green up to 2.5 s; red above 4 s.',
+  },
+  gaps: {
+    label: 'version gaps / reconnects',
+    text: 'Gaps: an update did not follow the version this browser had, so it asked for a fresh snapshot (normal after a pause or a slow connection). Reconnects: the WebSocket connection was lost and opened again. Green while there are no reconnects.',
+  },
+} as const;
 
-interface Vitals {
-  inp: number | null;
-  lcp: number | null;
-}
+const ms = (v: number | null | undefined) => (v != null ? `${v} ms` : undefined);
 
 /** Live numbers measured in this browser, plus the load slider (feed tick rate). */
 export function MetricsPanel() {
-  const feed = useFeed();
-  const [net, setNet] = useState<FeedMetrics | null>(null);
-  const [main, setMain] = useState<MainThread>({
-    fps: 0,
-    slowFrames: 0,
-    oddsRenders: 0,
-    longTasks: 0,
-  });
-  const [vitals, setVitals] = useState<Vitals>({ inp: null, lcp: null });
-
-  useEffect(() => feed?.onMetrics(setNet), [feed]);
-
-  // FPS and slow frames from requestAnimationFrame; long tasks from PerformanceObserver.
-  useEffect(() => {
-    let frames = 0;
-    let slow = 0;
-    let longTasks = 0;
-    let last = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      frames++;
-      if (now - last > 50) slow++;
-      last = now;
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    let observer: PerformanceObserver | undefined;
-    try {
-      observer = new PerformanceObserver((list) => (longTasks += list.getEntries().length));
-      observer.observe({ type: 'longtask', buffered: false });
-    } catch {
-      // longtask is Chromium-only
-    }
-    let renders = renderStats.odds;
-    const timer = setInterval(() => {
-      setMain({
-        fps: frames,
-        slowFrames: slow,
-        oddsRenders: renderStats.odds - renders,
-        longTasks,
-      });
-      renders = renderStats.odds;
-      frames = slow = 0;
-    }, 1_000);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(timer);
-      observer?.disconnect();
-    };
-  }, []);
-
-  // Core Web Vitals, loaded after hydration so they do not add to the initial bundle.
-  useEffect(() => {
-    let cancelled = false;
-    void import('web-vitals').then(({ onINP, onLCP }) => {
-      if (cancelled) return;
-      onINP((m) => setVitals((v) => ({ ...v, inp: Math.round(m.value) })), {
-        reportAllChanges: true,
-      });
-      onLCP((m) => setVitals((v) => ({ ...v, lcp: Math.round(m.value) })), {
-        reportAllChanges: true,
-      });
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  const { net, main, vitals } = useLiveMetrics();
   return (
     <section className="card metrics" aria-label="Live metrics">
       <header className="card-head">
@@ -97,51 +68,45 @@ export function MetricsPanel() {
       </header>
       <div className="card-body">
         <dl className="stats">
-          <Stat label="WS msgs/s" value={net?.msgsPerSec} />
+          <Stat help={HELP.msgs} value={net?.msgsPerSec} />
+          <Stat help={HELP.kb} value={net?.kbPerSec} />
+          <Stat help={HELP.ops} value={net?.opsPerSec} />
           <Stat
-            label="KB/s"
-            value={net?.kbPerSec}
-            hint="WebSocket payload bytes (UTF-8). With compression off (the default) the network carries this plus 2–10 bytes of frame header per message"
-          />
-          <Stat
-            label="ops/s"
-            value={net?.opsPerSec}
-            hint="Market/event updates applied after coalescing"
-          />
-          <Stat
-            label="tick→client p50 / p99"
+            help={HELP.latency}
             value={net?.latencyP50 != null ? `${net.latencyP50} / ${net.latencyP99} ms` : undefined}
-            hint="Feed time of the oldest change in a delta → arrival in the worker, last 5 s"
+            grade={GRADE.latencyP99(net?.latencyP99)}
           />
-          <Stat label="FPS" value={main.fps} warn={main.fps > 0 && main.fps < 50} />
+          <Stat help={HELP.fps} value={main?.fps} grade={GRADE.fps(main?.fps)} />
           <Stat
-            label="slow frames/s"
-            value={main.slowFrames}
-            hint="Frames longer than 50 ms"
-            warn={main.slowFrames > 0}
+            help={HELP.slow}
+            value={main?.slowFrames}
+            grade={GRADE.slowFrames(main?.slowFrames)}
           />
+          <Stat help={HELP.renders} value={main?.oddsRenders} />
           <Stat
-            label="odds cells rendered/s"
-            value={main.oddsRenders}
-            hint="React renders of single odds buttons"
+            help={HELP.longTasks}
+            value={main?.longTasks ?? undefined}
+            grade={GRADE.longTasks(main?.longTasks)}
           />
+          <Stat help={HELP.inp} value={ms(vitals.inp)} grade={GRADE.inp(vitals.inp)} />
+          <Stat help={HELP.lcp} value={ms(vitals.lcp)} grade={GRADE.lcp(vitals.lcp)} />
           <Stat
-            label="long tasks"
-            value={main.longTasks}
-            hint="Main-thread tasks over 50 ms since load"
-          />
-          <Stat
-            label="INP"
-            value={vitals.inp != null ? `${vitals.inp} ms` : '—'}
-            hint="Interaction to Next Paint (web-vitals)"
-            warn={(vitals.inp ?? 0) > 200}
-          />
-          <Stat label="LCP" value={vitals.lcp != null ? `${vitals.lcp} ms` : '—'} />
-          <Stat
-            label="version gaps / reconnects"
+            help={HELP.gaps}
             value={net ? `${net.gaps} / ${net.reconnects}` : undefined}
+            grade={GRADE.reconnects(net?.reconnects)}
           />
         </dl>
+        <details className="metrics-help">
+          <summary>What do these numbers mean?</summary>
+          <dl>
+            {Object.values(HELP).map((h) => (
+              <div key={h.label}>
+                <dt>{h.label}</dt>
+                <dd>{h.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
         <LoadSlider />
       </div>
     </section>
@@ -149,51 +114,28 @@ export function MetricsPanel() {
 }
 
 function Stat({
-  label,
+  help,
   value,
-  hint,
-  warn,
+  grade,
 }: {
-  label: string;
+  help: { label: string; text: string };
   value: string | number | undefined;
-  hint?: string;
-  warn?: boolean;
+  grade?: Grade;
 }) {
   return (
-    <div className="stat" title={hint}>
-      <dt>{label}</dt>
-      <dd data-warn={warn || undefined}>{value ?? '—'}</dd>
+    <div className="stat" title={help.text}>
+      <dt>{help.label}</dt>
+      <dd data-grade={grade}>{value ?? '—'}</dd>
     </div>
   );
 }
 
 function LoadSlider() {
-  const [rate, setRate] = useState<number | null>(null);
-  const [enabled, setEnabled] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  useEffect(() => {
-    void fetch('/api/load')
-      .then((r) => r.json() as Promise<{ rate: number | null; enabled: boolean }>)
-      .then((d) => {
-        setRate(d.rate);
-        setEnabled(d.enabled && d.rate !== null);
-      })
-      .catch(() => setEnabled(false));
-  }, []);
-
-  const onChange = (value: number) => {
-    setRate(value);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      void fetch('/api/load', { method: 'POST', body: JSON.stringify({ rate: value }) });
-    }, 250);
-  };
-
+  const { rate, enabled, setRate } = useFeedLoad();
   return (
     <label className="slider">
       <span>
-        Feed load <strong>{rate ?? '—'}</strong> ticks/s
+        Feed load <strong>{rate ?? '—'}</strong> market updates per second
       </span>
       <input
         type="range"
@@ -202,8 +144,8 @@ function LoadSlider() {
         step={50}
         value={rate ?? MIN_TICK_RATE}
         disabled={!enabled}
-        onChange={(e) => onChange(Number(e.target.value))}
-        aria-label="Feed ticks per second"
+        onChange={(e) => setRate(Number(e.target.value))}
+        aria-label="Feed market updates per second"
       />
       <span className="muted small">Shared demo: the rate applies to every viewer.</span>
     </label>

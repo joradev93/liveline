@@ -28,4 +28,7 @@ export interface FeedMetrics {
 
 /** Feed worker -> main thread. */
 export type FromWorker =
-  { type: 'batch'; items: FeedItem[] } | { type: 'metrics'; metrics: FeedMetrics };
+  | { type: 'batch'; items: FeedItem[] }
+  | { type: 'metrics'; metrics: FeedMetrics }
+  /** Events per sport id; sent on connect and when a count changes. */
+  | { type: 'counts'; counts: Record<string, number> };

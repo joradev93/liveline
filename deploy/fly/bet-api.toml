@@ -5,6 +5,8 @@
 #   fly deploy -c deploy/fly/bet-api.toml
 app = "liveline-bet-api"
 primary_region = "ams"
+# Disk-backed swap: a short memory spike slows the app down instead of killing it.
+swap_size_mb = 256
 
 [build]
   dockerfile = "../../Dockerfile"
@@ -17,7 +19,7 @@ primary_region = "ams"
   BET_PORT = "8080"
   BET_DB = "/data/bets.db"
   # Replace with the real Vercel URL (comma-separated list allowed).
-  WEB_ORIGIN = "https://liveline.vercel.app"
+  WEB_ORIGIN = "https://liveline-zeta.vercel.app"
 
 [mounts]
   source = "bets"
@@ -40,4 +42,4 @@ primary_region = "ams"
 # SQLite = one writer: keep exactly one machine.
 [[vm]]
   size = "shared-cpu-1x"
-  memory = "512mb"
+  memory = "256mb"

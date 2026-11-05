@@ -37,7 +37,8 @@ export class TopicSync {
   }
 
   handle(msg: ServerMessage, now: number): SyncResult {
-    if (msg.t === 'error') return { action: 'ignore' };
+    // Counts carry no topic or version; the worker forwards them before this check.
+    if (msg.t === 'error' || msg.t === 'counts') return { action: 'ignore' };
     const version = this.versions.get(msg.topic);
     if (version === undefined) return { action: 'ignore' }; // unsubscribed meanwhile
 

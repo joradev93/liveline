@@ -1,10 +1,10 @@
 /**
- * Builds docs/demo.gif from the frames of record-demo.mjs. Pure JS (no ffmpeg):
+ * Builds docs/demo.gif (or docs/demo-mobile.gif) from the frames of record-demo.mjs. No ffmpeg:
  * frames are resampled to a fixed frame rate by their real timestamps, decoded with jpeg-js and
  * encoded with gifenc using one shared palette. Pixels that did not change since the previous
  * frame are written as transparent, which keeps the file small (most of the screen is static).
  *
- *   node e2e/make-gif.mjs [fps] [colors]
+ *   node e2e/make-gif.mjs [fps] [colors] [name]   # name: demo (default) or demo-mobile
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import gifenc from 'gifenc';
@@ -13,7 +13,8 @@ import jpeg from 'jpeg-js';
 const { applyPalette, GIFEncoder, quantize } = gifenc;
 
 const fps = Number(process.argv[2] ?? 8);
-const dir = new URL('./results/demo/', import.meta.url).pathname;
+const name = process.argv[4] ?? 'demo';
+const dir = new URL(`./results/${name}/`, import.meta.url).pathname;
 const frames = JSON.parse(readFileSync(`${dir}frames.json`, 'utf8'));
 if (frames.length === 0) throw new Error('no frames: run record-demo.mjs first');
 
@@ -66,7 +67,7 @@ for (const file of picks) {
   shown = indices;
 }
 gif.finish();
-const out = new URL('../docs/demo.gif', import.meta.url).pathname;
+const out = new URL(`../docs/${name}.gif`, import.meta.url).pathname;
 writeFileSync(out, gif.bytes());
 console.log(
   `${picks.length} frames, ${width}x${height}, ${fps} fps -> ${out} (${(gif.bytes().length / 1048576).toFixed(1)} MB)`,

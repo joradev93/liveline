@@ -31,12 +31,15 @@ afterAll(async () => {
   await feed.stop();
 });
 
-function collect(ws: WebSocket, count: number): Promise<ServerMessage[]> {
+/** Collects `count` messages; `counts` messages are skipped unless `withCounts` is set. */
+function collect(ws: WebSocket, count: number, withCounts = false): Promise<ServerMessage[]> {
   const out: ServerMessage[] = [];
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`got ${out.length}/${count} messages`)), 5_000);
     ws.onmessage = (ev) => {
-      out.push(serverMessageSchema.parse(JSON.parse(String(ev.data))) as ServerMessage);
+      const msg = serverMessageSchema.parse(JSON.parse(String(ev.data))) as ServerMessage;
+      if (msg.t === 'counts' && !withCounts) return;
+      out.push(msg);
       if (out.length === count) {
         clearTimeout(timer);
         resolve(out);
@@ -80,6 +83,20 @@ describe('gateway over real sockets', () => {
     ws.close();
     expect(bad).toMatchObject({ t: 'error', code: 'BAD_MESSAGE' });
     expect(unknown).toMatchObject({ t: 'error', code: 'UNKNOWN_TOPIC' });
+  });
+
+  it('sends the event counts per sport on connect and over HTTP', async () => {
+    const ws = new WebSocket(`ws://127.0.0.1:${gateway.server.port}/ws`);
+    const [first] = await collect(ws, 1, true);
+    ws.close();
+    expect(first?.t).toBe('counts');
+    if (first?.t !== 'counts') return;
+    const total = Object.values(first.counts).reduce((a, b) => a + b, 0);
+    expect(total).toBe(gateway.state.eventCount);
+
+    const res = await fetch(`http://127.0.0.1:${gateway.server.port}/counts`);
+    expect(res.status).toBe(200);
+    expect(serverMessageSchema.parse(await res.json())).toMatchObject({ t: 'counts' });
   });
 
   it('serves snapshots and stats over HTTP', async () => {

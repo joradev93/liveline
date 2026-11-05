@@ -65,6 +65,14 @@ describe('server messages', () => {
     expect(serverMessageSchema.safeParse(msg).success).toBe(true);
   });
 
+  it('accepts counts per sport id and rejects bad keys or counts', () => {
+    expect(
+      serverMessageSchema.safeParse({ t: 'counts', counts: { '1': 40, '2': 0 } }).success,
+    ).toBe(true);
+    expect(serverMessageSchema.safeParse({ t: 'counts', counts: { x: 1 } }).success).toBe(false);
+    expect(serverMessageSchema.safeParse({ t: 'counts', counts: { '1': -1 } }).success).toBe(false);
+  });
+
   it('rejects ops with unknown fields or bad prices', () => {
     expect(deltaOpSchema.safeParse({ m: 1, sel: { '1': 0.5 } }).success).toBe(false);
     expect(deltaOpSchema.safeParse({ m: 1, foo: 1 }).success).toBe(false);

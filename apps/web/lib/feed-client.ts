@@ -13,7 +13,10 @@ export class FeedClient {
   private readonly refs = new Map<Topic, number>();
   private readonly pendingDrops = new Map<Topic, ReturnType<typeof setTimeout>>();
   private readonly metricsListeners = new Set<MetricsListener>();
+  private readonly countsListeners = new Set<() => void>();
   latest: FeedMetrics | null = null;
+  /** Events per sport id from the gateway; null until the first `counts` message. */
+  counts: Readonly<Record<string, number>> | null = null;
 
   constructor(
     private readonly store: LiveStore,
@@ -26,7 +29,10 @@ export class FeedClient {
     this.worker.onmessage = (ev: MessageEvent<FromWorker>) => {
       const msg = ev.data;
       if (msg.type === 'batch') this.store.applyItems(msg.items);
-      else {
+      else if (msg.type === 'counts') {
+        this.counts = msg.counts;
+        for (const listener of this.countsListeners) listener();
+      } else {
         this.latest = msg.metrics;
         for (const listener of this.metricsListeners) listener(msg.metrics);
       }
@@ -68,6 +74,12 @@ export class FeedClient {
     for (const timer of this.pendingDrops.values()) clearTimeout(timer);
     this.worker.terminate();
   }
+
+  /** For `useSyncExternalStore`: called after `counts` changed. */
+  subscribeCounts = (listener: () => void): (() => void) => {
+    this.countsListeners.add(listener);
+    return () => this.countsListeners.delete(listener);
+  };
 
   onMetrics(listener: MetricsListener): () => void {
     this.metricsListeners.add(listener);

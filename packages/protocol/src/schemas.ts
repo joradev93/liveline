@@ -95,6 +95,10 @@ export const serverMessageSchema = z.discriminatedUnion('t', [
     ts: z.number(),
   }),
   z.object({
+    t: z.literal('counts'),
+    counts: z.record(z.string().regex(/^\d{1,9}$/), z.number().int().nonnegative()),
+  }),
+  z.object({
     t: z.literal('error'),
     code: z.enum(['BAD_MESSAGE', 'UNKNOWN_TOPIC', 'TOO_MANY_TOPICS']),
     message: z.string(),

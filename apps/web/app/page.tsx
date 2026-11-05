@@ -1,11 +1,12 @@
-import { SPORTS, type SnapshotMessage } from '@liveline/protocol';
+import { SPORTS, type CountsMessage, type SnapshotMessage } from '@liveline/protocol';
 import { Board } from '@/components/Board';
 import { ConnectionBadge } from '@/components/ConnectionBadge';
+import { EventCount } from '@/components/SportCount';
 import { SidePanel } from '@/components/SidePanel';
 import { SportTabs } from '@/components/SportTabs';
 import { GATEWAY_HTTP_URL } from '@/lib/config';
 import { sportName } from '@/lib/format';
-import { createSnapshotCache } from '@/lib/snapshot-cache';
+import { createSnapshotCache, createTtlCache } from '@/lib/snapshot-cache';
 
 async function loadSnapshot(sportId: number): Promise<SnapshotMessage | null> {
   try {
@@ -20,8 +21,22 @@ async function loadSnapshot(sportId: number): Promise<SnapshotMessage | null> {
   }
 }
 
+/** Events per sport id, for the badges on the sport tabs. */
+async function loadCounts(): Promise<Record<string, number> | null> {
+  try {
+    const res = await fetch(`${GATEWAY_HTTP_URL}/counts`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(1_500),
+    });
+    return res.ok ? ((await res.json()) as CountsMessage).counts : null;
+  } catch {
+    return null; // no badges until the WebSocket sends the counts
+  }
+}
+
 // Module scope: shared by all requests this server process handles.
 const getSnapshot = createSnapshotCache(loadSnapshot, 1_000);
+const getCounts = createTtlCache(loadCounts, 1_000);
 
 export default async function Page({
   searchParams,
@@ -32,7 +47,7 @@ export default async function Page({
   const sportId = SPORTS.some((s) => s.id === requested) ? requested : 1;
   // Not streamed behind <Suspense>: measured, that paints the shell earlier but the rows (the
   // phone LCP element) ~270 ms later, because React delays the reveal of streamed content.
-  const first = await getSnapshot(sportId);
+  const [first, counts] = await Promise.all([getSnapshot(sportId), getCounts('all')]);
 
   return (
     <>
@@ -41,14 +56,14 @@ export default async function Page({
           <span className="brand-mark" aria-hidden="true" />
           Liveline
         </div>
-        <SportTabs active={sportId} />
+        <SportTabs active={sportId} counts={counts} />
         <ConnectionBadge />
       </header>
       <main className="layout">
         <section className="board" aria-label={`${sportName(sportId)} events`}>
           <div className="board-head">
             <h1>{sportName(sportId)}</h1>
-            <span className="muted">{first ? `${first.total} events` : ''}</span>
+            <EventCount sportId={sportId} initial={first?.total} />
           </div>
           <p className="lead">
             Live odds from a synthetic feed, pushed over WebSocket and coalesced every 100 ms. Click

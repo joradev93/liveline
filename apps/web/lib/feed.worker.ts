@@ -49,7 +49,9 @@ function onMessage(text: string) {
   counters.msgs++;
   counters.bytes += utf8Length(text);
   const now = Date.now();
-  const result = sync.handle(JSON.parse(text) as ServerMessage, now);
+  const msg = JSON.parse(text) as ServerMessage;
+  if (msg.t === 'counts') return post({ type: 'counts', counts: msg.counts });
+  const result = sync.handle(msg, now);
   if (result.action === 'resubscribe') send({ t: 'sub', topics: [result.topic] });
   if (result.action !== 'apply') return;
   if (result.item.kind === 'delta') counters.ops += result.item.ops.length;

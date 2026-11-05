@@ -131,6 +131,15 @@ node e2e/measure-bundle.mjs
 128.8 KB gzip, above the target before any app code. See DECISIONS D28 for what was tried, and
 D37 for the Day 8 change. Day 8 raw output: `e2e/results/opt-after/bundle.txt`.
 
+After the deploy (2026-11-05) the metrics panel got a help list with one text per metric:
+initial JS **146.2 KB** gzip (+0.7 KB, 7 files), 125.4 KB brotli, HTML 16.0 KB gzip (112.9 KB
+unzipped). Same command, web on port 3002: `node e2e/measure-bundle.mjs http://localhost:3002/`.
+
+Later on 2026-11-05, after the mobile bottom bar (shared metrics provider, compact strip) and the
+count badges on the sport tabs: initial JS **146.8 KB** gzip (+0.6 KB, 7 files), 126.0 KB brotli,
+HTML 17.5 KB gzip (119.8 KB unzipped). Command:
+`node e2e/measure-bundle.mjs 'http://localhost:3002/?sport=1'`. Raw: `e2e/results/2026-11-05/bundle.txt`.
+
 ## Web: Lighthouse (Lighthouse CI 0.16, Chrome, 3 runs, median)
 
 ```bash
@@ -146,7 +155,15 @@ node lh-summary.mjs results/lighthouse-mobile
 | desktop | 100         | 100           | 100            | 209 ms | **209 ms** | 0 ms | 0   | lead paragraph             |
 
 LCP target (< 1.5 s): met in both presets. Raw: `e2e/results/lighthouse-*/`.
-Server, gateway and feed run on the same machine (no real network latency).
+
+Measured again on 2026-11-05 after the mobile bottom bar and the count badges (same commands,
+`--url=http://localhost:3002/?sport=1`; raw: `e2e/results/2026-11-05/lighthouse-*/`):
+
+| preset                                                                      | performance | accessibility | best practices | FCP    | LCP        | TBT  | CLS | LCP element                         |
+| --------------------------------------------------------------------------- | ----------- | ------------- | -------------- | ------ | ---------- | ---- | --- | ----------------------------------- |
+| mobile                                                                      | 100         | 100           | 100            | 791 ms | **791 ms** | 2 ms | 0   | team name in the first row (2 of 3) |
+| desktop                                                                     | 100         | 100           | 100            | 213 ms | **213 ms** | 0 ms | 0   | lead paragraph                      |
+| Server, gateway and feed run on the same machine (no real network latency). |
 
 ## Web: runtime under feed load (FPS, INP, long tasks)
 
@@ -169,7 +186,17 @@ node e2e/measure-runtime.mjs --rate 2000 --cpu 4
 | 500/s     | 4×           | 60.1     | 16.7 ms        | 60.3          | 16.7 / 16.8 ms            | 0          | 32 ms | 16 ms              | 26            | 2                     | 73 / 103 ms           |
 | 2000/s    | 4×           | 60       | 16.8 ms        | 60.3          | 16.7 / 16.8 ms            | 0          | 32 ms | 32 ms              | 80            | 14                    | 92 / 101 ms           |
 
-- INP target (< 100 ms at 500 ticks/s): met (32 ms). Event Timing rounds durations to 8 ms.
+Measured again on 2026-11-05 after the mobile bottom bar and the count badges (same commands with
+`--url http://localhost:3002/?sport=1`; raw: `e2e/results/2026-11-05/runtime-*.json`):
+
+| feed rate | CPU slowdown | FPS idle | frame p95 idle | FPS scrolling | frame p95 / max scrolling | long tasks | INP   | worst sport switch | ops/s applied | odds cells rendered/s | tick→client p50 / p99 |
+| --------- | ------------ | -------- | -------------- | ------------- | ------------------------- | ---------- | ----- | ------------------ | ------------- | --------------------- | --------------------- |
+| 500/s     | 1×           | 60       | 16.7 ms        | 60.2          | 16.7 / 33.3 ms            | 0          | 40 ms | 40 ms              | 18            | 5                     | 82 / 100 ms           |
+| 500/s     | 4×           | 60       | 16.7 ms        | 60            | 16.8 / 33.4 ms            | 0          | 32 ms | 32 ms              | 23            | 10                    | 72 / 100 ms           |
+| 2000/s    | 4×           | 60       | 16.8 ms        | 59.9          | 16.7 / 33.4 ms            | 0          | 32 ms | 32 ms              | 85            | 20                    | 94 / 101 ms           |
+
+- INP target (< 100 ms at 500 ticks/s): met (32 ms; 40 ms in the 2026-11-05 run at 1× CPU, where
+  the worst interaction was the first sport switch). Event Timing rounds durations to 8 ms.
 - "ops/s applied" and "odds cells rendered/s" come from the app's own metrics panel during the idle
   phase: the client receives one sport topic (main markets only), and React re-renders only odds
   cells that are mounted (visible + overscan) and whose price changed.

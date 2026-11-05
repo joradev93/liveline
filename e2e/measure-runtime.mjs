@@ -149,7 +149,7 @@ for (let i = 0; i < 3; i++) {
 const switchDurations = [];
 for (const name of ['Tennis', 'Football', 'Basketball', 'Football']) {
   const before = (await collect()).events.length;
-  await page.getByRole('link', { name, exact: true }).click();
+  await page.getByRole('link', { name: new RegExp(`^${name}\\b`) }).click();
   await page.locator('.board-head h1', { hasText: name }).waitFor();
   await page.waitForTimeout(400);
   const after = (await collect()).events.slice(before);

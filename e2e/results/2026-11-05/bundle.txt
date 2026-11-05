@@ -1,0 +1,12 @@
+     1.9 KB  /_next/static/chunks/1_idrq5qzqlp7.js
+     7.6 KB  /_next/static/chunks/2og-yjysa4e_7.js
+    45.4 KB  /_next/static/chunks/2kzs15lu2r3n0.js
+    70.1 KB  /_next/static/chunks/32o3ishnskbzu.js
+     3.8 KB  /_next/static/chunks/turbopack-2u1d16houkiyo.js
+     8.5 KB  /_next/static/chunks/20w7o49v-jipm.js
+     9.7 KB  /_next/static/chunks/3pmzomuj646ny.js
+initial JS (in the HTML): 146.8 KB compressed, 486.9 KB uncompressed, 7 files
+initial JS, same files with brotli q11 (computed locally): 126.0 KB
+lazy JS (after hydration): 2.5 KB compressed, 1 files
+worker JS: 0.0 KB compressed, 0 files
+HTML document: 17.5 KB compressed, 119.8 KB uncompressed

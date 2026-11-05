@@ -1,23 +1,35 @@
 # Liveline
 
+**▶ Live demo: [liveline-zeta.vercel.app](https://liveline-zeta.vercel.app/)**
+
 A small but production-minded **live sportsbook**, end to end: synthetic odds feed → WebSocket
 gateway → Next.js client → bet placement with odds validation. Every number below was measured;
 the commands are in [METRICS.md](METRICS.md).
 
-![Demo: live odds at 2000 ticks/s, event markets, placing a multiple](docs/demo.gif)
+The live demo runs the web on Vercel and the gateway, bet API and feed on Fly.io; see
+[deploy/](deploy/README.md). The load slider there is shared by every viewer.
+
+[![Desktop demo: live odds at 2000 market updates per second, count badges on the sport tabs, event markets, placing a multiple](docs/demo.gif)](https://liveline-zeta.vercel.app/)
+
+<a href="https://liveline-zeta.vercel.app/"><img src="docs/demo-mobile.gif" width="300" alt="Phone demo: compact metrics strip in the bottom bar, metrics sheet with the load slider, betslip sheet, placing a bet"></a>
 
 ## What it shows
 
 - **Feed** (`apps/feed-sim`): 1500 synthetic events, 18 533 markets, seeded random-walk odds,
-  lifecycle prematch → live → suspended → settled, 50–2000 ticks/s.
+  lifecycle prematch → live → suspended → settled, 50–2000 ticks/s (one tick = one market update;
+  the UI calls it "market updates per second").
 - **Gateway** (`apps/gateway`, uWebSockets.js): snapshot + delta per topic (`sport:{id}`,
   `event:{id}`), monotonic versions, coalescing every 100 ms, serialize once per topic,
-  backpressure (skip deltas for slow sockets) and resync.
+  backpressure (skip deltas for slow sockets) and resync; event counts per sport pushed to every
+  socket when they change.
 - **Bet API** (`apps/bet-api`, Fastify + SQLite): validates odds against the current market,
   accept-change policy `none | higher | any`, `Idempotency-Key`, mock balance.
 - **Client** (`apps/web`, Next.js App Router, React 19): server-rendered first rows, WebSocket +
   JSON parsing in a Web Worker, `useSyncExternalStore` selectors per odds cell, CSS-class odds
-  flash, virtualized list, betslip (singles + multiples), live metrics panel with a load slider.
+  flash, virtualized list, betslip (singles + multiples), live event count on each sport tab, live
+  metrics panel with a load slider (green = good, red = bad, with a help text per metric). On
+  phones: a bottom bar with a compact metrics strip that stays visible over the list, and separate
+  sheets for the full metrics and the betslip.
 
 ## Architecture
 
@@ -39,8 +51,8 @@ flowchart LR
   end
   SIM -- "feed bus: snapshot + seq batches" --> STATE
   SIM -- "feed bus" --> BOOK
-  HUB -- "WS snapshot / delta" --> WORKER
-  HUB -. "GET /snapshot/sport:1" .-> RSC
+  HUB -- "WS snapshot / delta / counts" --> WORKER
+  HUB -. "GET /snapshot/sport:1 · GET /counts" .-> RSC
   UI -- "POST /bets + Idempotency-Key" --> VAL
   UI -. "load slider /api/load" .-> SIM
 ```
@@ -52,6 +64,7 @@ client → server  { t:"sub",   topics:["sport:1","event:42"] }
                  { t:"unsub", topics:[...] }
 server → client  { t:"snapshot", topic, v, events:[...] }
                  { t:"delta", topic, from, v, ops:[...], ts }
+                 { t:"counts", counts:{"1":248,"2":231,...} }   events per sport, on connect + on change
 ops              { m, sel:{"1":2.15,"X":3.30} } | { m, st:"suspended" }      market
                  { e, est:"live", sc:[1,0] } | { add: event } | { rm: eventId } event
 ```
@@ -79,16 +92,17 @@ ops              { m, sel:{"1":2.15,"X":3.30} } | { m, st:"suspended" }      mar
 ## Measured numbers
 
 Apple M5 Pro laptop; everything (services + load generator) on the same machine. Details, raw
-files and commands: [METRICS.md](METRICS.md).
+files and commands: [METRICS.md](METRICS.md). The web rows (LCP, INP, FPS, JS) were measured again
+on 2026-11-05, after the mobile bottom bar and the count badges (raw: `e2e/results/2026-11-05/`).
 
 | target                           | result                                                                                                                                      | status                           |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | p99 tick→client < 150 ms         | **113 ms** at 2 000 clients, **134 ms** at 5 000 (k6); **149 ms** at 15 000 (Node load generator); includes the 100 ms coalescing window    | met                              |
 | max clients per gateway instance | **15 000** verified within the p99 target (gateway at ~48% of one core). Higher not measurable on one macOS machine (ephemeral port limit). | lower bound                      |
-| LCP < 1.5 s                      | **784 ms** mobile (simulated slow 4G, 4× CPU), **211 ms** desktop — Lighthouse 100/100/100                                                  | met                              |
-| INP < 100 ms at 500 ticks/s      | **32 ms** (also 32 ms at 2 000 ticks/s with 4× CPU slowdown)                                                                                | met                              |
-| ~60 FPS scrolling under load     | **60.1–60.3 FPS**, frame p95 16.7 ms, 0 long tasks (500 and 2 000 ticks/s, 1× and 4× CPU)                                                   | met                              |
-| initial JS < 120 KB gzip         | **145.5 KB** gzip (124.8 KB brotli). Next.js 16 + React 19 runtime alone is 128.8 KB.                                                       | **missed** ([D28](DECISIONS.md)) |
+| LCP < 1.5 s                      | **791 ms** mobile (simulated slow 4G, 4× CPU), **213 ms** desktop — Lighthouse 100/100/100                                                  | met                              |
+| INP < 100 ms at 500 ticks/s      | **40 ms** (1× CPU), **32 ms** (4× CPU slowdown); 32 ms at 2 000 ticks/s with 4× CPU                                                         | met                              |
+| ~60 FPS scrolling under load     | **59.9–60.2 FPS**, frame p95 16.7–16.8 ms, 0 long tasks (500 and 2 000 ticks/s, 1× and 4× CPU)                                              | met                              |
+| initial JS < 120 KB gzip         | **146.8 KB** gzip (126.0 KB brotli). Next.js 16 + React 19 runtime alone is 128.8 KB.                                                       | **missed** ([D28](DECISIONS.md)) |
 | bet placement                    | p99 **2.15 ms** at 200 bets/s, **7.32 ms** at 1 000 bets/s                                                                                  | —                                |
 | backpressure                     | slow socket: 708 deltas skipped, 6 gaps → 6 resyncs, back in sync                                                                           | works                            |
 
@@ -117,6 +131,7 @@ Open <http://localhost:3000>. Dev mode with reload: `pnpm dev`.
 pnpm test        # vitest: protocol, feed-sim, gateway (coalescing, backpressure, resync,
                  # randomized replica test), bet-api (validation, idempotency), web store
 pnpm e2e         # Playwright with the installed Chrome (needs `pnpm build`)
+cd e2e && E2E_BASE_URL=https://liveline-zeta.vercel.app pnpm exec playwright test   # against the live site
 pnpm lint && pnpm typecheck && pnpm format:check
 ```
 
@@ -149,6 +164,7 @@ Design decisions with alternatives: [DECISIONS.md](DECISIONS.md). Known problems
 
 ## Not done yet
 
-- Not deployed: configs for Vercel + Fly.io are in [deploy/](deploy/README.md), untested.
+- Numbers in this README were measured on one laptop, not on the deployment. The deployed
+  backend runs on 256 MB shared-CPU machines; it has not been load-tested.
 - Phase 2: Redis pub/sub between feed-sim and 2+ gateway instances.
 - All data is synthetic. No third-party or operator APIs are used.

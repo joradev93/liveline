@@ -10,8 +10,13 @@
 
 ARG NODE_VERSION=22
 
-FROM node:${NODE_VERSION}-bookworm-slim AS build
+FROM node:${NODE_VERSION}-trixie-slim AS build
 ARG APP
+# git: uWebSockets.js is a GitHub dependency. python3/make/g++: better-sqlite3 compiles from
+# source when no prebuilt binary matches. Build stage only; the runtime image stays slim.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates git python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
 RUN corepack enable
 WORKDIR /repo
 COPY . .
@@ -19,7 +24,7 @@ RUN pnpm install --frozen-lockfile --filter "@liveline/${APP}..."
 RUN pnpm --filter "@liveline/${APP}" build
 RUN node scripts/pack-app.mjs "${APP}" /out && cd /out && npm install --omit=dev --no-audit --no-fund
 
-FROM node:${NODE_VERSION}-bookworm-slim
+FROM node:${NODE_VERSION}-trixie-slim
 # bet-api writes SQLite to a mounted volume, which is root-owned on Fly.io: build it with RUN_AS=root.
 ARG RUN_AS=node
 ENV NODE_ENV=production

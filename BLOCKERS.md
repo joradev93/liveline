@@ -25,9 +25,12 @@ Things that could not be done as specified, and the workaround.
 - **Workaround:** GIF built in JS (D35). Playwright video recording was also not used: it needs a
   Playwright-specific ffmpeg download into `~/Library/Caches`.
 
-## B4. Docker build and deploy configs not tested
+## B4. Docker build and deploy configs not tested (resolved 2026-11-05)
 
 - **Problem:** no Node base image is available locally, and pulling one was not approved (only the k6
   image was). No Fly.io / Vercel accounts.
 - **Workaround:** the packaging step of the Dockerfile was tested without Docker (D33). The GitHub
   Actions workflow was also never run (no remote).
+- **Resolved:** deployed to Fly.io + Vercel; the first deploy found and fixed three Dockerfile
+  problems and one config mistake (deploy/README.md, D41–D42). The repo is on GitHub, so the
+  workflow now runs on push.

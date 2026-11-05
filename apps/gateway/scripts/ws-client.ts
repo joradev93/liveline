@@ -48,6 +48,10 @@ ws.onmessage = (ev) => {
     console.error('server error', msg);
     return;
   }
+  if (msg.t === 'counts') {
+    console.log('counts', msg.counts);
+    return;
+  }
   if (msg.t === 'snapshot') {
     totals.snapshots++;
     versions.set(msg.topic, msg.v);

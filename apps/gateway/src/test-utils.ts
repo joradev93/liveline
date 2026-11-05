@@ -53,7 +53,7 @@ export class Replica {
 
   drain(): void {
     for (const msg of this.sub.take()) {
-      if (msg.t === 'error' || msg.topic !== this.topic) continue;
+      if (msg.t === 'error' || msg.t === 'counts' || msg.topic !== this.topic) continue;
       if (msg.t === 'snapshot') {
         this.events.clear();
         for (const e of msg.events) this.events.set(e.id, e);

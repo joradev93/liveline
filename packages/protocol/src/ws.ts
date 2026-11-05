@@ -2,7 +2,7 @@
  * Client <-> gateway WebSocket protocol.
  *
  * client -> server: { t:"sub", topics } | { t:"unsub", topics }
- * server -> client: snapshot | delta | error
+ * server -> client: snapshot | delta | counts | error
  *
  * Versions are per topic and monotonic. A delta moves a client from `from` to `v`.
  * Ops carry absolute values (latest price / status), so a delta can be applied to any
@@ -67,13 +67,22 @@ export interface DeltaMessage {
   ts: number;
 }
 
+/**
+ * Number of events per sport, keyed by sport id. Sent to every client on connect and whenever a
+ * count changes (no topic, no version: each message carries all counts).
+ */
+export interface CountsMessage {
+  t: 'counts';
+  counts: Record<string, number>;
+}
+
 export interface ErrorMessage {
   t: 'error';
   code: 'BAD_MESSAGE' | 'UNKNOWN_TOPIC' | 'TOO_MANY_TOPICS';
   message: string;
 }
 
-export type ServerMessage = SnapshotMessage | DeltaMessage | ErrorMessage;
+export type ServerMessage = SnapshotMessage | DeltaMessage | CountsMessage | ErrorMessage;
 
 export const isMarketOp = (op: DeltaOp): op is MarketOp => 'm' in op;
 export const isEventOp = (op: DeltaOp): op is EventOp => 'e' in op;
