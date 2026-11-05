@@ -52,7 +52,8 @@ jobs:
           GW_LOG=quiet node apps/gateway/dist/index.js &
           BET_DB=:memory: node apps/bet-api/dist/index.js &
           pnpm --filter @liveline/web start &
-          npx wait-on -t 60000 http://localhost:3000 http://127.0.0.1:7002/health
+          # http-get: wait-on sends HEAD by default, and the gateway answers only GET /health.
+          npx wait-on -t 60000 http://localhost:3000 http-get://127.0.0.1:7002/health
           pnpm --filter @liveline/e2e lhci
       - uses: actions/upload-artifact@v4
         if: always()
